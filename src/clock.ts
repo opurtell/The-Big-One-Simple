@@ -110,12 +110,15 @@ export function restartCycle(s: CaseState, now: number): CaseState {
  * delta so the bar doesn't jump. Log clock times stay the phone's real time (DESIGN #18).
  */
 export function resync(s: CaseState, monitorElapsed: number, now: number): CaseState {
-  const delta = monitorElapsed - elapsedAt(s, now);
-  const entry: Entry = { id: newId(now), kind: 'resync', elapsed: monitorElapsed, at: now, delta, before: snap(s) };
+  // Whole seconds only (the monitor shows whole seconds). Shifting both the clock and the
+  // cycle start by the same integer keeps the bar exactly where it was.
+  const delta = Math.round(monitorElapsed - (now - s.startTime + s.pausedTime) / 1000);
+  const entry: Entry = {
+    id: newId(now), kind: 'resync', elapsed: elapsedAt(s, now) + delta, at: now, delta, before: snap(s),
+  };
   return {
     ...s,
-    startTime: now,
-    pausedTime: monitorElapsed * 1000,
+    pausedTime: s.pausedTime + delta * 1000,
     cycleStartElapsed: s.cycleStartElapsed === null ? null : s.cycleStartElapsed + delta,
     entries: [...s.entries, entry],
   };
