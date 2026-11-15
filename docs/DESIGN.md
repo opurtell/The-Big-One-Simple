@@ -18,6 +18,7 @@ This builds on `BRIEF.md` (goals, non-goals, the cognitive-load test) and `DECIS
 | 6b | **Optional IV / IO tag on IV/IO** (added 15/11/2026). Same as 6a: IV/IO logs at once, then for 5 s the tile splits into **IV \| IO** (blue) with the shrinking line. Ignored = "IV/IO"; tagged = "IV/IO (IO)". | Records the access route with no extra decision. |
 | 6c | **LMA tile renamed "Airway", with an optional LMA / ETT tag** (added 15/11/2026). Same as 6a: logs "Airway", and for 5 s offers **LMA \| ETT**. Tagged = "Airway (ETT)". Catch-up and totals say "Airway". | One tile covers either device, so no eighth tile. |
 | 6 | **A bar tap restarts the 2:00.** It's logged as "Cycle restart" and can be undone. | Undo behaves the same for every action. |
+| 6d | **"More" list** (added 15/11/2026, Oscar). The bottom strip is **Undo (half width) \| More \| Summary**. More opens Matt's full medication and treatment list in place of the tiles, with the clock and cycle bar (or ROSC timer) still above it. Three tabs, **Meds · Airway · Other**, opening on Meds; nothing scrolls (2 columns, or 3 on short phones). Tap an item: it logs with the time, flashes, and the tiles come back. Undo then reads "Undo Calcium". A **Close** button sits below, and the list closes itself after 15 s without a tap. Given items show their count. **Names only, no doses.** Items a tile already logs aren't listed (adrenaline push, amiodarone, LMA, ETT, IV, IO). Not offered in catch-up. | For jobs that get complicated (post-ROSC especially) without changing the seven tiles. Reading the list is a cost you only pay when you choose to open it. |
 
 ## 2. Layout and look (matched to Matt's app)
 
@@ -31,7 +32,7 @@ This builds on `BRIEF.md` (goals, non-goals, the cognitive-load test) and `DECIS
 [ Adrenaline ] [ Amiodarone ]
 [ IV/IO      ] [ Airway     ]
 [ ROSC (full width)         ]
-[ Undo ]       [ Summary ]       ← thin strip
+[ Undo        ] [ More ] [ Summary ]   ← thin strip (More: DESIGN #6d)
 ```
 
 *Shock and Disarm sit nearest the bar they restart. ROSC is wide, so it's easy to see and hard to hit by accident.*

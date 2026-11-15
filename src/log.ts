@@ -1,6 +1,7 @@
 // Plain-text log for pasting into the ePCR (DESIGN.md §4).
 
-import { elapsedAt, formatTime, isCatchup, type CaseState, type Entry } from './clock';
+import { elapsedAt, extraCounts, formatTime, isCatchup, type CaseState, type Entry } from './clock';
+import { EXTRA_NAMES } from './extras';
 import { TILE_BY_ID, tagsFor, type TileId } from './tiles';
 
 // Totals and "before app" lines read in clinical order, not grid order.
@@ -24,6 +25,8 @@ export function entryLabel(e: Entry, s?: CaseState): string {
       return 'Cycle restart';
     case 'resync':
       return `Resync ${(e.delta ?? 0) < 0 ? '-' : '+'}${formatTime(Math.abs(e.delta ?? 0))}`;
+    case 'extra':
+      return e.item ?? 'Other';
     default: {
       const label = TILE_BY_ID[e.kind].label;
       return e.tag ? `${label} (${e.tag})` : label;
@@ -60,6 +63,14 @@ export function totals(s: CaseState): { id: TileId; text: string }[] {
   return out;
 }
 
+/** "More" list totals in list order, e.g. `Calcium ×1`. They follow the tile totals. */
+export function extraTotals(s: CaseState): string[] {
+  const counts = extraCounts(s);
+  // Names no longer on the list (a case saved by another version) still show, at the end.
+  const names = [...EXTRA_NAMES, ...[...counts.keys()].filter((n) => !EXTRA_NAMES.includes(n))];
+  return names.filter((n) => counts.get(n)).map((n) => `${n} ×${counts.get(n)}`);
+}
+
 /** Log rows: "before app" counts first, then every entry in order. `elapsed`/`clock` are null for priors. */
 export function logRows(s: CaseState): { key: string; elapsed: string | null; clock: string | null; item: string }[] {
   const rows: ReturnType<typeof logRows> = [];
@@ -79,8 +90,8 @@ export function formatLog(s: CaseState, now = Date.now()): string {
     `The Big One: Simple, ${dateDMY(s.startClockTime)}`,
     `Start ${clockTime(s.startClockTime)} · Duration ${formatTime(elapsedAt(s, now), true)}`,
   ];
-  const t = totals(s);
-  if (t.length) lines.push(t.map((x) => x.text).join(' · '));
+  const t = [...totals(s).map((x) => x.text), ...extraTotals(s)];
+  if (t.length) lines.push(t.join(' · '));
   lines.push('');
   for (const r of logRows(s)) {
     lines.push(r.elapsed === null ? `before app · ${r.item}` : `${r.elapsed}  ${r.clock}  ${r.item}`);

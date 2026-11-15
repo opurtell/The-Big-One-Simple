@@ -16,11 +16,12 @@ export type ClockSnap = { startTime: number; pausedTime: number; cycleStartElaps
 
 export type Entry = {
   id: string;
-  kind: TileId | 'start' | 'cycle' | 'resync';
+  kind: TileId | 'start' | 'cycle' | 'resync' | 'extra';
   elapsed: number; // seconds, monitor-aligned at time of tap
   at: number; // wall ms (log clock column)
   prior?: number; // catch-up count; shown as "before app"
   delta?: number; // resync seconds
+  item?: string; // name of a "More" list item (kind 'extra', extras.ts)
   tag?: Tag; // optional tag, e.g. VF on a Shock or IO on IV/IO (TILE_TAGS)
   before: ClockSnap; // restored by Undo
 };
@@ -94,6 +95,24 @@ export function tap(s: CaseState, tileId: TileId, now: number): CaseState {
   // A new ROSC starts a fresh ROSC checklist; PHEA ticks carry over (upstream L2016).
   const checks = tileId === 'rosc' && s.checks ? { ...s.checks, rosc: [] } : s.checks;
   return { ...s, cycleStartElapsed, entries: [...s.entries, entry], checks };
+}
+
+/**
+ * Logs an item from the "More" list (DESIGN #6d). Same double-tap guard and Undo snapshot as
+ * a tile; it never touches the cycle bar.
+ */
+export function logExtra(s: CaseState, item: string, now: number): CaseState {
+  const last = [...s.entries].reverse().find((e) => e.kind === 'extra' && e.item === item);
+  if (last && now - last.at < DOUBLE_TAP_MS) return s;
+  const entry: Entry = { id: newId(now), kind: 'extra', item, elapsed: elapsedAt(s, now), at: now, before: snap(s) };
+  return { ...s, entries: [...s.entries, entry] };
+}
+
+/** How many times each "More" item has been logged, by name. */
+export function extraCounts(s: CaseState): Map<string, number> {
+  const out = new Map<string, number>();
+  for (const e of s.entries) if (e.kind === 'extra' && e.item) out.set(e.item, (out.get(e.item) ?? 0) + 1);
+  return out;
 }
 
 /**

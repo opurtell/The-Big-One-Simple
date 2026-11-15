@@ -131,3 +131,16 @@ Choices future sessions must respect. Newest first.
 - **Why:** Oscar asked for them; after ROSC the cognitive-load budget is bigger, and the tiles stay
   one tap away (Close, or a re-arrest closes it automatically).
 
+
+## 15/11/2026: "More" list for the full medications and treatments (Oscar)
+
+- **Decision:** a **More** button in the bottom strip (Undo | More | Summary) opens Matt's full
+  medication and treatment list in place of the tiles: 18 meds, 5 airway, 4 other, as names only
+  (DESIGN #6d, plan in `docs/plans/phase-5-more-list.md`). Tap an item to log it and return to the tiles.
+- **Amends:** "exactly seven tiles". The seven tiles are unchanged; one strip button is added.
+- **Rejected:** swapping the lower tiles after ROSC (no extras during the arrest, and tiles that
+  change meaning invite mis-taps); a "Mark" button named later in Summary (relies on memory and
+  makes the log editable); adding items from Summary with a typed time (times from memory).
+  Also left out: doses, failed attempts, free-text entry, catch-up steppers for these items.
+- **Why:** Oscar wanted the full list for jobs that get complicated, e.g. post-ROSC. This works in
+  arrest and in ROSC, reuses the checklist-panel pattern, and costs one small button mid-arrest.

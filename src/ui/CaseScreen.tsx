@@ -4,13 +4,14 @@
 import { useState } from 'react';
 import { checked, CHECKLISTS, type ChecklistId } from '../checklists';
 import {
-  cycleRemaining, drugDue, elapsedAt, formatTime, inRosc, pendingTag, tileStats, undoable,
+  cycleRemaining, drugDue, elapsedAt, extraCounts, formatTime, inRosc, pendingTag, tileStats, undoable,
   type CaseState, type Entry,
 } from '../clock';
 import { entryLabel, hhmm } from '../log';
 import { TILES, type Tag, type TileId } from '../tiles';
 import { ChecklistPanel } from './ChecklistPanel';
 import { CycleBar } from './CycleBar';
+import { MorePanel } from './MorePanel';
 import { TileTag } from './TileTag';
 import { Tile } from './Tile';
 
@@ -18,6 +19,7 @@ type Props = {
   s: CaseState;
   now: number;
   onTap: (id: TileId) => void;
+  onExtra: (item: string) => void;
   onTag: (entryId: string, tag: Tag) => void;
   onCheck: (list: ChecklistId, label: string) => void;
   onRestartCycle: () => void;
@@ -29,13 +31,14 @@ type Props = {
 const GRID = TILES.filter((t) => t.id !== 'rosc');
 const ROSC = TILES.find((t) => t.id === 'rosc')!;
 
-export function CaseScreen({ s, now, onTap, onTag, onCheck, onRestartCycle, onUndo, onResync, onEnd }: Props) {
+export function CaseScreen({ s, now, onTap, onExtra, onTag, onCheck, onRestartCycle, onUndo, onResync, onEnd }: Props) {
   const next = undoable(s);
   const tagging = pendingTag(s, now) as (Entry & { kind: TileId }) | undefined;
   const rosc = tileStats(s, 'rosc', now);
   const [open, setOpen] = useState<ChecklistId | null>(null);
   // Re-arrest (Shock, Disarm, bar tap) leaves ROSC, which closes any open checklist.
   const list = inRosc(s) ? open : null;
+  const [more, setMore] = useState(false); // the "More" list, in place of the tiles (DESIGN #6d)
 
   return (
     <main className="mx-auto flex h-dvh max-w-[600px] flex-col gap-2.5 overflow-hidden px-3 pt-[max(8px,calc(env(safe-area-inset-top)+24px))] pb-[max(12px,env(safe-area-inset-bottom))] tabular-nums">
@@ -54,6 +57,8 @@ export function CaseScreen({ s, now, onTap, onTag, onCheck, onRestartCycle, onUn
 
       {list ? (
         <ChecklistPanel list={list} ticked={checked(s, list)} onToggle={(label) => onCheck(list, label)} onClose={() => setOpen(null)} />
+      ) : more ? (
+        <MorePanel counts={extraCounts(s)} onPick={onExtra} onClose={() => setMore(false)} />
       ) : (
         <>
           <div className="grid min-h-0 flex-1 grid-cols-2 grid-rows-3 gap-2.5">
@@ -75,15 +80,21 @@ export function CaseScreen({ s, now, onTap, onTag, onCheck, onRestartCycle, onUn
             <Tile tile={ROSC} count={rosc.count} sinceLast={rosc.sinceLast} onTap={() => (setOpen(null), onTap('rosc'))} wide />
           )}
 
-          <div className="grid shrink-0 grid-cols-2 gap-2.5">
+          <div className="grid shrink-0 grid-cols-4 gap-2.5">
             <button
               onClick={onUndo}
               disabled={!next}
-              className="h-14 truncate rounded-[14px] border-2 border-neutral-300 bg-white px-1 text-[16px] font-bold text-neutral-800 min-[400px]:text-[19px] disabled:text-neutral-300 short:h-12"
+              className="col-span-2 h-14 truncate rounded-[14px] border-2 border-neutral-300 bg-white px-1 text-[16px] font-bold text-neutral-800 min-[400px]:text-[19px] disabled:text-neutral-300 short:h-12"
             >
               {next ? `Undo ${entryLabel(next)}` : 'Undo'}
             </button>
-            <button onClick={onEnd} className="h-14 rounded-[14px] bg-neutral-800 text-[16px] font-bold text-white short:h-12 min-[400px]:text-[19px]">
+            <button
+              onClick={() => setMore(true)}
+              className="h-14 rounded-[14px] border-[3px] border-emerald-600 bg-emerald-50 text-[17px] font-extrabold text-emerald-800 short:h-12 min-[400px]:text-[19px]"
+            >
+              More
+            </button>
+            <button onClick={onEnd} className="h-14 rounded-[14px] bg-neutral-800 text-[15px] font-bold text-white short:h-12 min-[400px]:text-[17px]">
               Summary
             </button>
           </div>

@@ -135,6 +135,10 @@ export function useCase() {
       buzz();
       update((s, t) => clock.tap(s, id, t));
     },
+    logExtra: (item: string) => {
+      buzz();
+      update((s, t) => clock.logExtra(s, item, t));
+    },
     tagEntry: (entryId: string, tag: Tag) => update((s) => clock.tagEntry(s, entryId, tag)),
     toggleCheck: (list: ChecklistId, label: string) => update((s) => toggleCheck(s, list, label)),
     restartCycle: () => update((s, t) => clock.restartCycle(s, t)),
