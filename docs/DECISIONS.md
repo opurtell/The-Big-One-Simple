@@ -2,6 +2,21 @@
 
 Choices future sessions must respect. Newest first.
 
+## 15/11/2026: Layout and tiles (Oscar)
+
+- **Decision:** a 2-minute cycle bar across the top, the monitor-synced elapsed time top
+  right, and exactly seven tiles: Adrenaline, Amiodarone, Shock, Disarm, LMA, IV/IO, ROSC.
+  The bar restarts on Shock/Disarm (or a tap on the bar) and stops on ROSC.
+- **Rejected:** no cycle timer at all, and upstream's evens/odds rhythm-interval patterns
+  (an extra choice before every case).
+- **Why:** the 2-min cycle is the one timer everyone watches. Tying it to the shock/disarm
+  tap needs no setup.
+
+## 15/11/2026: Repo renamed to The-Big-One-Simple
+
+- **Decision:** `opurtell/The-Big-One` → `opurtell/The-Big-One-Simple`, and Vite `base` changed to match.
+- **Why:** avoids confusion with Matt's app, and gives it its own Pages URL. Matt is OK with the fork.
+
 ## 15/11/2026: Rewrite the UI, port the clock
 
 - **Decision:** write a new small `src/` and port only the time-sync and catch-up logic from upstream.

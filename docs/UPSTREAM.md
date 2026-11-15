@@ -56,6 +56,16 @@ is the big default button. Catch up is the secondary one.
 Decide whether the simple version should, so that clock times of *future* entries follow
 the monitor. Existing log entries keep their recorded elapsed values.
 
+## 2-minute cycle (simplified from upstream's rhythm check)
+
+Upstream: `rhythmCheckTarget`, `rhythmInterval` (evens/odds/half-*, `calcNextIntervalTarget`
+~`App.tsx:2250-2262`), overtime, delay and pause states, plus forced-shock overlays.
+**Simple version:** store `cycleStartElapsed` only. `remaining = 120 - (elapsed - cycleStartElapsed)`.
+If it's negative, show it as red overtime. Set it to the current elapsed on a Shock/Disarm
+tap or a bar tap. Set it to `null` on ROSC (bar hidden or greyed). On resync, shift it by
+the same delta as the clock so the bar doesn't jump. Undoing a Shock/Disarm restores the
+previous `cycleStartElapsed`, so store it on the log entry.
+
 ## Treatment record
 
 `src/types.ts` `Treatment`: `{ name, elapsed, round, clock, clockSeconds, prior?, ... }`.
@@ -63,7 +73,7 @@ Simple version: `{ id, tile, elapsed, at (wall ms), prior? }`. Derive the displa
 
 ## Drop entirely
 
-Timing modes (`elapsed`/`log`/`minimal`), rhythm interval and target logic, forced shock,
+Timing modes (`elapsed`/`log`/`minimal`), the rhythm interval patterns and the delay/pause logic, forced shock,
 CPR rounds, adrenaline/amiodarone "wipe" timers, dose functions (`getAdrenalinePushDose`,
 `getAmiodaroneDose`), weight/paed, checklists, vitals, tutorial, release notes, Android
 back-button stack handling (`App.tsx:1400-1540`, overkill with one screen), previous-cases list.

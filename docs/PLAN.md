@@ -7,23 +7,24 @@ Each phase gets `docs/plans/phase-N-<name>.md` with acceptance criteria. Oscar a
 Replace upstream `src/` on the `simple` branch with a minimal app. Drop unused deps
 (`docs/UPSTREAM.md`). Update the PWA manifest name to "The Big One: Simple" with the same icons.
 
-- `src/tiles.ts`: tile list (id, label, colour)
+- `src/tiles.ts`: the seven tiles (id, label, colour, `resetsCycle`, `stopsCycle`)
 - `src/clock.ts`: pure functions: `elapsedAt(state, now)`, `startCase(elapsed, now)`,
-  `resync(state, elapsed, now)`, `formatMMSS`. **Unit-tested with Vitest**, because this is the
+  `resync(state, elapsed, now)`, `cycleRemaining(state, now)`, `formatMMSS`. **Unit-tested with Vitest**, because this is the
   part that must be right.
 - `src/useCase.ts`: state, `localStorage` persistence, tick, visibility fix, wake lock
 - `src/App.tsx`: start screen / case screen / log screen
 
 **Accept:** builds and lints clean. Clock tests pass, including "elapsed is correct after a
-simulated 10-minute suspension" and "reload restores the running case".
+simulated 10-minute suspension", "reload restores the running case", "Shock resets the
+cycle and Undo restores it" and "resync doesn't jump the cycle bar".
 
 ## Phase 2: Case screen
 
-Big timer + tile grid (count + time since last) + Undo + End case. Resync is reached by
-tapping the timer.
+Layout: 2-min cycle bar across the top (big countdown, red overtime), synced elapsed time
+top right (tap to resync), tile grid of 7 (count + time since last), Undo + End case.
 
 **Accept:** passes the cognitive-load test in BRIEF. Tiles ≥ 25% of width on a 375 px
-screen. The timer is readable at 1 m. Undo reverses the last tap. Lock the phone for 5 min,
+screen. The timer is readable at 1 m. Shock/Disarm restarts the bar, and ROSC stops it. Undo reverses the last tap. Lock the phone for 5 min,
 unlock, and the time is correct.
 
 ## Phase 3: Catch up + log
@@ -36,5 +37,5 @@ stopwatch started at 07:30, and the log shows the prior items as "before app".
 
 ## Phase 4: Ship (needs Oscar)
 
-Decide the name/URL, enable GitHub Pages on the fork, push `simple` → `main` (or make Pages
-deploy from `simple`), test on Oscar's phone, and tell Matt.
+Enable GitHub Pages on `opurtell/The-Big-One-Simple`, push `simple` → `main` (or make Pages
+deploy from `simple`), and test on Oscar's phone.

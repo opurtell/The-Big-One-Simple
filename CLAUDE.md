@@ -1,8 +1,8 @@
 # The Big One: Simple
 
-A simple fork of Matt Jones's cardiac arrest timer, **The Big One**. One screen: a case
-timer above a grid of big tiles (Adrenaline, Amiodarone, Shock, Disarm, LMA …). Tap a
-tile to log it. It keeps upstream's wall-clock time sync and its "catch up" start (enter
+A simple fork of Matt Jones's cardiac arrest timer, **The Big One**. One screen: a 2-minute
+cycle bar across the top, the monitor-synced elapsed time top right, and a grid of seven
+big tiles (Adrenaline, Amiodarone, Shock, Disarm, LMA, IV/IO, ROSC). Tap a tile to log it. It keeps upstream's wall-clock time sync and its "catch up" start (enter
 the monitor's elapsed time and what has already been given), and drops everything else.
 **The goal is minimal cognitive load in the middle of an arrest.**
 
@@ -19,10 +19,12 @@ upstream app (a 5,930-line `src/App.tsx`). No simple-version code has been writt
 3. `docs/UPSTREAM.md`: how upstream's time sync and catch-up work, with line refs to port from
 4. `docs/DECISIONS.md`: choices already made. Don't re-litigate them
 5. `docs/NEXT_SESSION.md`: the concrete next step
+6. `docs/CLAUDE_PROJECT.md`: instructions for the matching Claude desktop project (keep it in sync with BRIEF)
 
 ## Repo layout
 
-- This folder is a git clone of the fork **`opurtell/The-Big-One`** (`origin`).
+- This folder is a git clone of the fork **`opurtell/The-Big-One-Simple`** (`origin`; renamed
+  from `The-Big-One` on 15/11/2026, and GitHub redirects the old URL).
   `upstream` = `MattJonesACTAS/The-Big-One` (Matt's original).
 - **Work on the `simple` branch.** `main` mirrors upstream, so keep it clean so it can be
   fast-forwarded with `git fetch upstream && git checkout main && git merge --ff-only upstream/main`.
@@ -48,8 +50,9 @@ upstream app (a 5,930-line `src/App.tsx`). No simple-version code has been writt
    Phones throttle or suspend timers when locked, and incrementing drifts minutes behind.
 2. **Re-derive the time on `visibilitychange`** and on load from `localStorage`. A reload
    or killed tab mid-case must come back with the correct time and log.
-3. **`vite.config.ts` has `base: '/The-Big-One/'`.** That matches the GitHub Pages path for a
-   repo with that name. If the repo is renamed, change it, or the deployed assets 404.
+3. **`vite.config.ts` has `base: '/The-Big-One-Simple/'`.** That matches the GitHub Pages path
+   for the repo name. If the repo is renamed again, change it, or the deployed assets 404.
+   Upstream's `main` still says `/The-Big-One/`, so watch for it when merging.
 4. **The PWA uses `registerType: 'prompt'`**, so an old service worker keeps serving the old
    build until the user accepts the update. Test fresh builds in a private window.
 5. **Upstream code has `SPDX-License-Identifier: Apache-2.0` headers but no LICENSE file.**
@@ -60,7 +63,7 @@ upstream app (a 5,930-line `src/App.tsx`). No simple-version code has been writt
 ## Unattended work: reversible only
 
 Commit on `simple`, but don't push, open PRs against Matt's repo, enable GitHub Pages, or
-deploy without Oscar's say-so. Note those in `docs/NEXT_SESSION.md` under "Waiting on Oscar".
+deploy without Oscar's say-so. (Matt has OK'd the public fork.) Note those in `docs/NEXT_SESSION.md` under "Waiting on Oscar".
 
 ## Conventions
 
@@ -74,7 +77,7 @@ deploy without Oscar's say-so. Note those in `docs/NEXT_SESSION.md` under "Waiti
 
 ```bash
 npm install
-npm run dev      # http://localhost:3000/The-Big-One/
+npm run dev      # http://localhost:3000/The-Big-One-Simple/
 npm run build
 npm run lint     # tsc --noEmit
 ```
