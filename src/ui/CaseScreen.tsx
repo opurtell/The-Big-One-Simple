@@ -5,7 +5,7 @@ import {
   cycleRemaining, elapsedAt, formatTime, pendingShockTag, tileStats, undoable,
   type CaseState, type Rhythm,
 } from '../clock';
-import { entryLabel } from '../log';
+import { entryLabel, hhmm } from '../log';
 import { TILES, type TileId } from '../tiles';
 import { CycleBar } from './CycleBar';
 import { ShockTag } from './ShockTag';
@@ -24,10 +24,6 @@ type Props = {
 
 const GRID = TILES.filter((t) => t.id !== 'rosc');
 const ROSC = TILES.find((t) => t.id === 'rosc')!;
-const wallClock = (ms: number) => {
-  const d = new Date(ms);
-  return `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
-};
 
 export function CaseScreen({ s, now, onTap, onTagShock, onRestartCycle, onUndo, onResync, onEnd }: Props) {
   const next = undoable(s);
@@ -37,7 +33,7 @@ export function CaseScreen({ s, now, onTap, onTagShock, onRestartCycle, onUndo, 
   return (
     <main className="mx-auto flex h-dvh max-w-[600px] flex-col gap-2.5 overflow-hidden px-3 pt-[max(8px,env(safe-area-inset-top))] pb-[max(12px,env(safe-area-inset-bottom))] tabular-nums">
       <header className="flex h-[52px] shrink-0 items-center justify-between short:h-11">
-        <span className="text-[17px] font-semibold text-neutral-500">{wallClock(now)}</span>
+        <span className="text-[17px] font-semibold text-neutral-500">{hhmm(now)}</span>
         <button
           aria-label="Elapsed time, tap to resync"
           onClick={onResync}

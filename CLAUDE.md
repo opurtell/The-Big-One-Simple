@@ -11,8 +11,10 @@ the monitor's elapsed time and what has already been given), and drops everythin
 Phase 1 done (15/11/2026): pure, tested clock and case logic in `src/clock.ts`, log text in
 `src/log.ts`, persistence and wake lock in `src/useCase.ts`.
 Phase 2 done (15/11/2026): the real case screen in `src/ui/` (`CaseScreen`, `CycleBar`, `Tile`,
-`ShockTag`). Start, catch-up, resync and log are still unstyled placeholders in `src/App.tsx`.
-Next: Phase 3. `docs/NEXT_SESSION.md` says where to start.
+`ShockTag`).
+Phase 3 done (15/11/2026): `StartScreen`, `CatchupScreen`, `ResyncSheet`, `LogScreen` and the shared
+`Keypad` in `src/ui/` (keypad logic in `src/keypad.ts`); `src/App.tsx` is a thin screen switcher.
+Next: Phase 4 (ship). `docs/NEXT_SESSION.md` says where to start.
 
 ## Read these first
 
