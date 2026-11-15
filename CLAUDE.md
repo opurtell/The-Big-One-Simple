@@ -18,6 +18,7 @@ upstream app (a 5,930-line `src/App.tsx`). No simple-version code has been writt
 2. `docs/PLAN.md`: the phases and the acceptance criteria
 3. `docs/UPSTREAM.md`: how upstream's time sync and catch-up work, with line refs to port from
 4. `docs/DECISIONS.md`: choices already made. Don't re-litigate them
+4a. `docs/DESIGN.md`: detailed behaviour, colours and log format (locked 15/11/2026)
 5. `docs/NEXT_SESSION.md`: the concrete next step
 6. `docs/CLAUDE_PROJECT.md`: instructions for the matching Claude desktop project (keep it in sync with BRIEF)
 

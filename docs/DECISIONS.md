@@ -2,6 +2,23 @@
 
 Choices future sessions must respect. Newest first.
 
+## 15/11/2026: Optional VF / pVT tag on Shock (Oscar)
+
+- **Decision:** Shock logs and restarts the bar at once. For 5 s the tile offers **VF | pVT**. Tapping one is optional, and if it's ignored the log says "Shock".
+- **Rejected:** a required pop-up (it adds a modal and a decision to every shock), and two separate Shock tiles (8 tiles, and a choice before every shock).
+- **Why:** it records the rhythm without blocking the shock, and ignoring it does no harm.
+
+## 15/11/2026: Design details locked (Oscar)
+
+- **Decision:** the 25 behaviour, look and log decisions in `docs/DESIGN.md`. The highlights:
+  multi-step Undo, End case opens the log with no confirm, Matt's light theme and drug colours,
+  a microwave-style time keypad, plain-text Copy, and one "Last case" kept.
+- **Amends "Layout and tiles":** Matt's evens/odds/half-evens/half-odds patterns are allowed,
+  as an **optional choice on the catch-up screen only**, to line the bar up with a cycle already
+  running. "Start now" still has no pattern choice.
+- **Rejected:** a confirm dialog on End case, sound, a dark theme, editing the log in the app.
+- **Why:** each passes the cognitive-load test, and matching Matt's look keeps the two apps familiar.
+
 ## 15/11/2026: Layout and tiles (Oscar)
 
 - **Decision:** a 2-minute cycle bar across the top, the monitor-synced elapsed time top

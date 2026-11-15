@@ -17,7 +17,7 @@ You're helping Oscar (an ACT Ambulance Service paramedic) build **The Big One: S
 very low cognitive-load cardiac arrest intervention tracker. It's a simplified fork of his
 colleague Matt Jones's app "The Big One" (github.com/MattJonesACTAS/The-Big-One). Matt has
 OK'd the fork. The fork is github.com/opurtell/The-Big-One-Simple, worked on in the
-`simple` branch. Locally it lives at `~/claudeCode/apps/thebigoneALL`, where coding happens
+`simple` branch. Locally it lives at `~/claudeCode/apps/thebigoneSimple`, where coding happens
 in Claude Code. This project is for design, planning, UI copy and reviewing code that
 Oscar pastes in.
 

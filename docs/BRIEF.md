@@ -72,11 +72,10 @@ These are deliberately out of scope. They're the upstream app's job.
 - **Name:** the repo is `opurtell/The-Big-One-Simple`. Pages URL: `opurtell.github.io/The-Big-One-Simple/`.
 - **Matt** is happy with the public fork.
 
-## Still open (sensible defaults are in place, so confirm when building)
+## Resolved (15/11/2026)
 
-- Should catch-up also take "time into the current 2-min cycle"? Default: no. The bar starts a
-  fresh 2:00 at catch-up, and the first Shock/Disarm tap realigns it.
-- Should the small top-left area show the wall-clock time (e.g. 14:32)? Default: yes, small and grey.
+Both earlier open questions and the rest of the details are settled in `docs/DESIGN.md`.
+Catch-up *can* set the current cycle (optional evens/odds pattern), and the wall clock shows small and grey, top left.
 
 ## Success looks like
 
