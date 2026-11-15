@@ -14,7 +14,9 @@ Phase 2 done (15/11/2026): the real case screen in `src/ui/` (`CaseScreen`, `Cyc
 `ShockTag`).
 Phase 3 done (15/11/2026): `StartScreen`, `CatchupScreen`, `ResyncSheet`, `LogScreen` and the shared
 `Keypad` in `src/ui/` (keypad logic in `src/keypad.ts`); `src/App.tsx` is a thin screen switcher.
-Next: Phase 4 (ship). `docs/NEXT_SESSION.md` says where to start.
+Phase 4 done (15/11/2026): Pages deploys from `simple` (`.github/workflows/static.yml`), and
+`src/pwa.ts` gives offline support plus an "Update ready" bar on the Start screen only.
+Live at https://opurtell.github.io/The-Big-One-Simple/. `docs/NEXT_SESSION.md` says what's left.
 
 ## Read these first
 
@@ -59,11 +61,13 @@ Next: Phase 4 (ship). `docs/NEXT_SESSION.md` says where to start.
    for the repo name. If the repo is renamed again, change it, or the deployed assets 404.
    Upstream's `main` still says `/The-Big-One/`, so watch for it when merging.
 4. **The PWA uses `registerType: 'prompt'`**, so an old service worker keeps serving the old
-   build until the user accepts the update. Test fresh builds in a private window.
+   build until the user taps "Update ready" on the Start screen. Test fresh builds in a private window.
 5. **Upstream code has `SPDX-License-Identifier: Apache-2.0` headers but no LICENSE file.**
    Keep the headers on files derived from upstream.
 6. **This is clinical-adjacent.** It is a *log*, not decision support: no dose calculations,
    no prompts about what to give next. See `docs/BRIEF.md` non-goals.
+7. **Don't push an upstream sync to `origin/main`.** `main` has upstream's Pages workflow, which
+   deploys on push to `main` and would replace the live app. See `docs/DECISIONS.md`.
 
 ## Unattended work: reversible only
 

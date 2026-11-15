@@ -1,6 +1,6 @@
 # Phase 4: Ship (needs Oscar)
 
-**Status:** draft · 15/11/2026
+**Status:** built 15/11/2026 (workflow + update prompt). On-phone checks are Oscar's.
 
 ## Steps (each needs Oscar's go-ahead)
 

@@ -1,17 +1,26 @@
 // Before the case: Start now (big), Catch up, and Last case if one is kept (DESIGN #22).
+// A new deploy is offered here only, never mid-case (see src/pwa.ts).
 
 import { elapsedAt, formatTime, type CaseState } from '../clock';
 import { dateDMY, hhmm } from '../log';
+import { useUpdate } from '../pwa';
 
 type Props = { now: number; last: CaseState | null; onStart: () => void; onCatchup: () => void; onLast: () => void };
 
 export function StartScreen({ now, last, onStart, onCatchup, onLast }: Props) {
+  const update = useUpdate();
   return (
     <main className="mx-auto flex h-dvh max-w-[600px] flex-col gap-4 px-4 pt-[max(24px,env(safe-area-inset-top))] pb-[max(24px,env(safe-area-inset-bottom))] tabular-nums">
       <header className="flex items-baseline justify-between">
         <h1 className="text-xl font-bold">The Big One: Simple</h1>
         <span className="text-base text-neutral-600">{hhmm(now)}</span>
       </header>
+      {update && (
+        <button onClick={update} className="flex h-14 shrink-0 items-center justify-between rounded-2xl bg-sky-700 px-5 text-lg font-semibold text-white active:bg-sky-800">
+          <span>Update ready</span>
+          <span>Reload</span>
+        </button>
+      )}
       <button onClick={onStart} className="flex-1 rounded-3xl bg-emerald-600 text-5xl font-extrabold tracking-[-0.5px] text-white active:bg-emerald-700">
         Start now
       </button>

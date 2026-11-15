@@ -2,7 +2,7 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: ['main']
+    branches: ['simple']
   workflow_dispatch:
 
 permissions:
@@ -27,8 +27,11 @@ jobs:
           node-version: '20'
       
       - name: Install dependencies
-        run: npm install
+        run: npm ci
       
+      - name: Type-check and test
+        run: npm run lint && npm test
+
       - name: Build
         run: npm run build
       

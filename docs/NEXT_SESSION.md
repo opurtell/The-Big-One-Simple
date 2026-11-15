@@ -4,21 +4,25 @@
 
 ## Start here
 
-1. Phases 1–3 are merged into `simple`. Every screen is real: Start, Catch up, Case (+ Resync sheet) and Log.
-2. Build **Phase 4 (ship)** from `docs/plans/phase-4-ship.md`: point the Pages workflow (`.github/workflows/static.yml`) at `simple`, enable Pages, check offline + the update prompt.
+1. Phases 1–4 are merged into `simple`. The app is live at
+   https://opurtell.github.io/The-Big-One-Simple/ and deploys on every push to `simple`.
+2. Nothing is planned beyond Phase 4. Next work comes from Oscar's phone testing and the mock arrest.
 
-## Notes from Phase 3
+## Notes from Phase 4
 
-- `src/keypad.ts` is the pure microwave keypad (digits → seconds, display, `secondsNow`). `enteredAt` updates on every key, so the clock runs from the last key typed (DESIGN #14).
-- **Resync is whole seconds:** `clock.resync` rounds the delta and adds it to both `pausedTime` and `cycleStartElapsed`, so the bar stays exactly put (no ±1 s flicker from fractions). The Resync sheet's delta is fixed at the last key typed, so it doesn't drift while the sheet is open.
-- Catch-up's "Start at" button ticks live (typed time + seconds since the last key), so it shows the time the case will actually start at.
-- `log.ts` now exports `totals()` and `logRows()`, shared by `LogScreen` and `formatLog`.
-- Copy falls back to a hidden textarea + `execCommand('copy')` when the async clipboard isn't available (plain http on the local network). Button reads "Copied" / "Copy failed" for 2 s.
-- Last case opens the same `LogScreen` read-only (Back + Copy, no New case).
-- Catch-up fits the iPhone SE (375×667) with no scroll via `short:` sizes; it scrolls if it ever doesn't fit.
+- `.github/workflows/static.yml` now triggers on `simple` (not `main`), uses `npm ci`, and runs
+  `npm run lint && npm test` before building, so a failing test blocks the deploy.
+- `src/pwa.ts` registers the service worker and exposes `useUpdate()`. When a new deploy is waiting,
+  only the Start screen shows "Update ready · Reload" (never mid-case). It also checks hourly.
+- Checked in headless Chromium against `vite preview`: works offline after the first visit
+  (Start now and tiles work with the network off), and after a rebuild the update bar shows on the
+  Start screen, stays hidden during a case, and goes away after tapping it.
+- Don't push an upstream sync to `origin/main`: upstream's workflow on `main` would redeploy Matt's app.
 
 ## Waiting on Oscar
 
-- On-phone checks for Phases 2–3 (can't be done in the cloud): lock 5 min and unlock (elapsed and bar correct), screen stays awake, glanceable at 1 m in sun, and the copied log pastes cleanly into a notes app / ePCR.
-- Pages still deploys from `main` until Phase 4, so test with `npm run dev` on the local network for now.
-- Oscar gave permission (15/11/2026) for phase threads to push, open PRs into `simple` and merge them.
+- **Install:** open the live URL in Safari on the phone → Share → Add to Home Screen.
+- **Airplane mode test:** open the installed app once online, then turn on airplane mode and reopen it.
+- **Update prompt:** after the next deploy, open the app on the Start screen (may need a close and reopen) and check "Update ready" appears.
+- **Mock arrest** with someone who hasn't seen the app: every intervention logged with no explanation, and the log within a few seconds of the monitor's event times.
+- On-phone checks from Phases 2–3: lock 5 min and unlock (elapsed and bar correct), screen stays awake, glanceable at 1 m in sun, and the copied log pastes cleanly into notes / ePCR.
