@@ -4,8 +4,10 @@
 
 ## Start here
 
-1. Phases 1–4 are merged into `simple`. The app is live at
-   https://opurtell.github.io/The-Big-One-Simple/ and deploys on every push to `simple`.
+1. Phases 1–4 are merged into `simple`. Once Pages is enabled (see "Waiting on Oscar"), the app
+   goes live at https://opurtell.github.io/The-Big-One-Simple/ and deploys on every push to `simple`.
+   The first run (15/11/2026) passed lint, tests and build, then stopped at "Get Pages site failed":
+   Pages wasn't enabled on the repo yet.
 2. Nothing is planned beyond Phase 4. Next work comes from Oscar's phone testing and the mock arrest.
 
 ## Notes from Phase 4
@@ -21,6 +23,9 @@
 
 ## Waiting on Oscar
 
+- **Enable Pages:** repo Settings → Pages → Source: GitHub Actions. Then Settings → Environments →
+  `github-pages` → Deployment branches: add `simple` if only `main` is allowed. Then Actions →
+  Deploy to GitHub Pages → Run workflow on `simple`.
 - **Install:** open the live URL in Safari on the phone → Share → Add to Home Screen.
 - **Airplane mode test:** open the installed app once online, then turn on airplane mode and reopen it.
 - **Update prompt:** after the next deploy, open the app on the Start screen (may need a close and reopen) and check "Update ready" appears.

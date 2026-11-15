@@ -16,7 +16,7 @@ Phase 3 done (15/11/2026): `StartScreen`, `CatchupScreen`, `ResyncSheet`, `LogSc
 `Keypad` in `src/ui/` (keypad logic in `src/keypad.ts`); `src/App.tsx` is a thin screen switcher.
 Phase 4 done (15/11/2026): Pages deploys from `simple` (`.github/workflows/static.yml`), and
 `src/pwa.ts` gives offline support plus an "Update ready" bar on the Start screen only.
-Live at https://opurtell.github.io/The-Big-One-Simple/. `docs/NEXT_SESSION.md` says what's left.
+Goes live at https://opurtell.github.io/The-Big-One-Simple/ once Pages is enabled. `docs/NEXT_SESSION.md` says what's left.
 
 ## Read these first
 
