@@ -3,7 +3,7 @@
 
 import { useEffect, useState } from 'react';
 import { elapsedAt, formatTime, type CaseState } from '../clock';
-import { clockTime, dateDMY, formatLog, logRows, totals } from '../log';
+import { clockTime, dateDMY, extraTotals, formatLog, logRows, totals } from '../log';
 import { TILE_BY_ID } from '../tiles';
 
 type Props = { s: CaseState; now: number; running: boolean; onBack: () => void; onNewCase: () => void };
@@ -58,6 +58,11 @@ export function LogScreen({ s, now, running, onBack, onNewCase }: Props) {
               </span>
             );
           })}
+          {extraTotals(s).map((text) => (
+            <span key={text} className="rounded-full bg-neutral-100 px-2.5 py-1 text-sm font-bold text-neutral-800">
+              {text}
+            </span>
+          ))}
         </div>
         <ol className="border-t border-neutral-200">
           {logRows(s).map((r) => (

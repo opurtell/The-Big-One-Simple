@@ -47,6 +47,7 @@ export default function App() {
           s={s}
           now={c.now}
           onTap={c.tap}
+          onExtra={c.logExtra}
           onTag={c.tagEntry}
           onCheck={c.toggleCheck}
           onRestartCycle={c.restartCycle}
