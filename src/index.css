@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* Short phones (iPhone SE, 667 px tall) get slightly smaller fixed heights so nothing scrolls. */
+@custom-variant short (@media (max-height: 700px));
+
 @theme {
   --font-sans: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
 }
@@ -13,6 +16,38 @@
   body {
     @apply bg-neutral-100 text-neutral-900 font-sans antialiased select-none;
     -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
     overscroll-behavior-y: none;
+    touch-action: manipulation; /* no double-tap zoom on fast gloved taps */
+  }
+  button {
+    cursor: pointer;
+  }
+}
+
+/* Tap feedback: 150 ms of inverted colours over the tile (DESIGN #3). */
+.tile-flash {
+  -webkit-backdrop-filter: invert(1);
+  backdrop-filter: invert(1);
+  animation: tile-flash 150ms steps(1, end) forwards;
+}
+@keyframes tile-flash {
+  to {
+    visibility: hidden;
+  }
+}
+
+/* The shrinking line under VF | pVT. Duration and delay are set inline. */
+.shock-countdown {
+  animation-name: shock-countdown;
+  animation-timing-function: linear;
+  animation-fill-mode: both;
+}
+@keyframes shock-countdown {
+  from {
+    width: 100%;
+  }
+  to {
+    width: 0%;
   }
 }

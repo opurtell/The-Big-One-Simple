@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
-  cycleRemaining, elapsedAt, formatTime, isStale, nextPatternTarget, parseCase, resync,
+  cycleRemaining, elapsedAt, formatTime, isStale, nextPatternTarget, parseCase, pendingShockTag, resync,
   restartCycle, startCase, tagShock, tap, tileStats, undo, undoable,
 } from './clock';
 
@@ -137,5 +137,36 @@ describe('formatTime', () => {
     expect(formatTime(450, true)).toBe('07:30');
     expect(formatTime(3725)).toBe('1:02:05');
     expect(formatTime(-14)).toBe('+0:14');
+  });
+});
+
+describe('shock tag window', () => {
+  it('offers the tag for 5 s after a Shock, then closes', () => {
+    const s = tap(startCase(T0), 'shock', sec(60));
+    expect(pendingShockTag(s, sec(60))?.kind).toBe('shock');
+    expect(pendingShockTag(s, sec(64.9))).toBeDefined();
+    expect(pendingShockTag(s, sec(65))).toBeUndefined();
+  });
+
+  it('closes when any other tile or a bar tap follows, and stays open after tagging', () => {
+    let s = tap(startCase(T0), 'shock', sec(60));
+    const id = s.entries[s.entries.length - 1].id;
+    s = tagShock(s, id, 'VF');
+    expect(pendingShockTag(s, sec(62))?.rhythm).toBe('VF');
+    expect(pendingShockTag(tap(s, 'adrenaline', sec(62)), sec(62))).toBeUndefined();
+    expect(pendingShockTag(restartCycle(s, sec(62)), sec(62))).toBeUndefined();
+  });
+
+  it('is never offered for "before app" shocks', () => {
+    expect(pendingShockTag(startCase(T0, 90, undefined, { shock: 2 }), T0)).toBeUndefined();
+  });
+});
+
+describe('ROSC then re-arrest', () => {
+  it('Shock after ROSC restarts the bar', () => {
+    let s = tap(startCase(T0), 'rosc', sec(300));
+    expect(cycleRemaining(s, sec(310))).toBeNull();
+    s = tap(s, 'shock', sec(400));
+    expect(cycleRemaining(s, sec(400))).toBe(120);
   });
 });
