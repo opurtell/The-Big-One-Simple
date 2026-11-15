@@ -1,6 +1,6 @@
 # Phase 1: Strip and skeleton
 
-**Status:** awaiting Oscar's approval · 15/11/2026
+**Status:** done · 15/11/2026 (approved by Oscar 15/11/2026)
 **Inputs:** `docs/DESIGN.md`, `docs/UPSTREAM.md`, the mock-ups (Claude artifact "Big One Simple mock-ups").
 
 ## Goal
@@ -60,9 +60,9 @@ type CaseState = ClockSnap & {
 
 ## Acceptance criteria
 
-- [ ] `npm run build`, `npm run lint` and `npm test` are clean.
-- [ ] No file over ~300 lines. `src/` is under ~600 lines before Phase 2 UI.
-- [ ] Tests pass for:
+- [x] `npm run build`, `npm run lint` and `npm test` are clean.
+- [x] No file over ~300 lines. `src/` is under ~600 lines before Phase 2 UI.
+- [x] Tests pass for:
   - elapsed is correct after a simulated 10-min suspension (fake `now`, no ticks)
   - reload restores the running case (serialise → parse → same elapsed)
   - Shock resets the cycle, and Undo restores the previous `cycleStartElapsed`
