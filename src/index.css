@@ -38,12 +38,12 @@
 }
 
 /* The shrinking line under VF | pVT. Duration and delay are set inline. */
-.shock-countdown {
-  animation-name: shock-countdown;
+.tag-countdown {
+  animation-name: tag-countdown;
   animation-timing-function: linear;
   animation-fill-mode: both;
 }
-@keyframes shock-countdown {
+@keyframes tag-countdown {
   from {
     width: 100%;
   }

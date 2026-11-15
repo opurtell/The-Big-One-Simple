@@ -2,7 +2,7 @@
 
 A simple fork of Matt Jones's cardiac arrest timer, **The Big One**. One screen: a 2-minute
 cycle bar across the top, the monitor-synced elapsed time top right, and a grid of seven
-big tiles (Adrenaline, Amiodarone, Shock, Disarm, LMA, IV/IO, ROSC). Tap a tile to log it. It keeps upstream's wall-clock time sync and its "catch up" start (enter
+big tiles (Adrenaline, Amiodarone, Shock, Disarm, Airway (LMA/ETT), IV/IO, ROSC). Tap a tile to log it. It keeps upstream's wall-clock time sync and its "catch up" start (enter
 the monitor's elapsed time and what has already been given), and drops everything else.
 **The goal is minimal cognitive load in the middle of an arrest.**
 

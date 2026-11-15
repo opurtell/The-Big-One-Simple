@@ -28,7 +28,7 @@ Oscar pastes in.
   rhythm check) or when the bar itself is tapped. **ROSC** stops it.
 - **Top right:** the case's elapsed time, **synced to the monitor's elapsed time**. Tap it to
   resync (enter what the monitor shows). Small wall-clock time at top left.
-- **Grid of exactly seven big tiles:** Adrenaline, Amiodarone, Shock, Disarm, LMA, IV/IO, ROSC.
+- **Grid of exactly seven big tiles:** Adrenaline, Amiodarone, Shock, Disarm, Airway (LMA/ETT), IV/IO, ROSC.
   Tapping one logs it with a timestamp. Each tile shows its count and the time since the last one (`×2 · 3:41 ago`).
 - **Undo** (last tap) and **End case** → a chronological log (elapsed + clock time + item)
   that can be copied as text for the ePCR.

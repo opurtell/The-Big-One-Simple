@@ -3,15 +3,14 @@
 // so time is always derived from the wall clock and never counted (ported from upstream
 // App.tsx time sync; see docs/UPSTREAM.md).
 
-import { TILE_BY_ID, isTileId, type TileId } from './tiles';
+import { TILE_BY_ID, isTileId, tagsFor, type Tag, type TileId } from './tiles';
 
 export const CYCLE_SECONDS = 120;
 export const DOUBLE_TAP_MS = 1000;
 export const STALE_MS = 3 * 60 * 60 * 1000;
-export const SHOCK_TAG_MS = 5000;
+export const TAG_MS = 5000;
 
 export type Pattern = 'evens' | 'odds' | 'half-evens' | 'half-odds';
-export type Rhythm = 'VF' | 'pVT';
 
 export type ClockSnap = { startTime: number; pausedTime: number; cycleStartElapsed: number | null };
 
@@ -22,7 +21,7 @@ export type Entry = {
   at: number; // wall ms (log clock column)
   prior?: number; // catch-up count; shown as "before app"
   delta?: number; // resync seconds
-  rhythm?: Rhythm; // optional Shock tag
+  tag?: Tag; // optional tag, e.g. VF on a Shock or IO on IV/IO (TILE_TAGS)
   before: ClockSnap; // restored by Undo
 };
 
@@ -93,10 +92,14 @@ export function tap(s: CaseState, tileId: TileId, now: number): CaseState {
   return { ...s, cycleStartElapsed, entries: [...s.entries, entry] };
 }
 
-/** Sets or changes the rhythm on a Shock in place, so one Undo still removes the whole shock. */
-export function tagShock(s: CaseState, entryId: string, rhythm: Rhythm): CaseState {
-  if (!s.entries.some((e) => e.id === entryId && e.kind === 'shock')) return s;
-  return { ...s, entries: s.entries.map((e) => (e.id === entryId ? { ...e, rhythm } : e)) };
+/**
+ * Sets or changes the tag on an entry in place (VF | pVT on a Shock, IV | IO on IV/IO),
+ * so one Undo still removes the whole entry. Ignores a tag that doesn't belong to the tile.
+ */
+export function tagEntry(s: CaseState, entryId: string, tag: Tag): CaseState {
+  const target = s.entries.find((e) => e.id === entryId);
+  if (!target || !isTileId(target.kind) || !tagsFor(target.kind)?.includes(tag)) return s;
+  return { ...s, entries: s.entries.map((e) => (e.id === entryId ? { ...e, tag } : e)) };
 }
 
 export function restartCycle(s: CaseState, now: number): CaseState {
@@ -142,13 +145,14 @@ export function endCase(s: CaseState, now: number): CaseState {
 }
 
 /**
- * The Shock the VF | pVT tag is offered for: the newest entry, if it's a live Shock under
- * 5 s old. Any later entry (another tile, bar tap, resync) closes the tag (DESIGN #6a).
+ * The entry a tag is offered for: the newest entry, if it's a live tap on a tagged tile
+ * (Shock, IV/IO) under 5 s old. Any later entry (another tile, bar tap, resync) closes
+ * the tag (DESIGN #6a, #6b).
  */
-export function pendingShockTag(s: CaseState, now: number): Entry | undefined {
+export function pendingTag(s: CaseState, now: number): Entry | undefined {
   const last = s.entries[s.entries.length - 1];
-  if (s.status !== 'running' || !last || last.kind !== 'shock' || last.prior) return undefined;
-  return now - last.at < SHOCK_TAG_MS ? last : undefined;
+  if (s.status !== 'running' || !last || last.prior || !isTileId(last.kind) || !tagsFor(last.kind)) return undefined;
+  return now - last.at < TAG_MS ? last : undefined;
 }
 
 /** Seconds left in the 2-min cycle (negative = overtime), or null after ROSC. */
@@ -204,7 +208,13 @@ export function parseCase(raw: string | null): CaseState | null {
       typeof s.startClockTime === 'number' &&
       (s.status === 'running' || s.status === 'ended') &&
       Array.isArray(s.entries);
-    return ok ? (s as CaseState) : null;
+    if (!ok) return null;
+    // Cases saved before IV/IO tags stored the Shock tag as `rhythm`.
+    for (const e of s.entries) {
+      if (e && e.rhythm && !e.tag) e.tag = e.rhythm;
+      if (e) delete e.rhythm;
+    }
+    return s as CaseState;
   } catch {
     return null;
   }

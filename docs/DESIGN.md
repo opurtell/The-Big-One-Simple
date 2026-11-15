@@ -13,6 +13,8 @@ This builds on `BRIEF.md` (goals, non-goals, the cognitive-load test) and `DECIS
 | 4 | **End case has no confirm dialog.** It opens the log, with a big "Back to case" button. The case is final only when "New case" is tapped. | Reversible in one tap, with nothing to read. |
 | 5 | **ROSC stops the bar.** A later Shock, Disarm or bar tap restarts it. There's no re-arrest tile. | The existing tiles already mean re-arrest. |
 | 6a | **Optional VF / pVT tag on Shock** (added 15/11/2026). Shock logs and restarts the bar immediately. For 5 s the Shock tile splits into **VF \| pVT**, with a shrinking line along the bottom. Tap one to tag the shock, or tap the other to change it. If it's ignored or another tile is tapped, the tile goes back to normal and the log says "Shock". Not a modal: the other tiles keep working. | It records the rhythm without blocking the shock or adding a decision you have to make. |
+| 6b | **Optional IV / IO tag on IV/IO** (added 15/11/2026). Same as 6a: IV/IO logs at once, then for 5 s the tile splits into **IV \| IO** (blue) with the shrinking line. Ignored = "IV/IO"; tagged = "IV/IO (IO)". | Records the access route with no extra decision. |
+| 6c | **LMA tile renamed "Airway", with an optional LMA / ETT tag** (added 15/11/2026). Same as 6a: logs "Airway", and for 5 s offers **LMA \| ETT**. Tagged = "Airway (ETT)". Catch-up and totals say "Airway". | One tile covers either device, so no eighth tile. |
 | 6 | **A bar tap restarts the 2:00.** It's logged as "Cycle restart" and can be undone. | Undo behaves the same for every action. |
 
 ## 2. Layout and look (matched to Matt's app)
@@ -25,7 +27,7 @@ This builds on `BRIEF.md` (goals, non-goals, the cognitive-load test) and `DECIS
 [ 2-min bar: countdown ······················ ]   clock (small, top left) · elapsed (top right)
 [ Shock      ] [ Disarm     ]
 [ Adrenaline ] [ Amiodarone ]
-[ IV/IO      ] [ LMA        ]
+[ IV/IO      ] [ Airway     ]
 [ ROSC (full width)         ]
 [ Undo ]       [ End case ]      ← thin strip
 ```
@@ -40,7 +42,7 @@ This builds on `BRIEF.md` (goals, non-goals, the cognitive-load test) and `DECIS
 | Amiodarone | `bg-purple-100` / `text-purple-900` | amiodarone drug timer (~L3138), the ICP-drug convention |
 | Shock | `bg-red-100` / `text-red-700` | shock = red in summary stats (L5022) |
 | Disarm | white / `text-blue-600` | "Disarmed" stat colour (L5023). Kept separate from airway |
-| IV/IO, LMA | `bg-blue-50` / `text-blue-900` | "Airway and access" group (~L3676) |
+| IV/IO, Airway | `bg-blue-50` / `text-blue-900` | "Airway and access" group (~L3676) |
 | ROSC | `bg-emerald-600` / white | Matt's primary emerald. Solid so it doesn't look like Adrenaline |
 | 2-min bar | `emerald-500` draining fill, then solid `red-600` + white text in overtime | countdown ring (~L2900) |
 
@@ -67,7 +69,7 @@ This builds on `BRIEF.md` (goals, non-goals, the cognitive-load test) and `DECIS
 
 | # | Decision |
 |---|---|
-| 19 | **Log layout:** header (date DD/MM/YYYY, start clock time, total duration) → totals (`Shock ×3 (VF 2, pVT 1), Adrenaline ×2…`). Tagged shocks read `Shock (VF)` / `Shock (pVT)` → chronological lines `elapsed · clock · item`. Before-app items come first: `before app · Shock ×2`. |
+| 19 | **Log layout:** header (date DD/MM/YYYY, start clock time, total duration) → totals (`Shock ×3 (VF 2, pVT 1), Adrenaline ×2…`). Tagged entries read `Shock (VF)`, `IV/IO (IO)`, `Airway (ETT)` → chronological lines `elapsed · clock · item`. Before-app items come first: `before app · Shock ×2`. |
 | 20 | **Export:** one "Copy" button (plain text to the clipboard). |
 | 21 | Undone entries are deleted from the log, not crossed out. |
 | 22 | **Last case:** one case kept, viewable from the start screen, until the next case starts. |
@@ -80,12 +82,12 @@ This builds on `BRIEF.md` (goals, non-goals, the cognitive-load test) and `DECIS
 ```
 The Big One: Simple, 15/11/2026
 Start 14:32:10 · Duration 24:15
-Shock ×3 · Adrenaline ×2 · Amiodarone ×1 · Disarm ×1 · IV/IO ×1 · LMA ×1 · ROSC ×1
+Shock ×3 · Adrenaline ×2 · Amiodarone ×1 · Disarm ×1 · IV/IO ×1 (IO 1) · Airway ×1 (ETT 1) · ROSC ×1
 
 before app · Shock ×1
 before app · Adrenaline ×1
 07:30  14:39:40  Start (catch-up)
-08:05  14:40:15  IV/IO
+08:05  14:40:15  IV/IO (IO)
 09:31  14:41:41  Shock (VF)
 ...
 ```
