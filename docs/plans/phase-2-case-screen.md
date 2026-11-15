@@ -1,6 +1,6 @@
 # Phase 2: Case screen
 
-**Status:** draft, approve after Phase 1 · 15/11/2026
+**Status:** built 15/11/2026 · on-phone checks still to do (marked below)
 **Mock-ups:** "Case: running", "Case: overtime", "Case: ROSC".
 
 ## Components (each < 120 lines)
@@ -19,10 +19,10 @@
 
 ## Acceptance criteria
 
-- [ ] Matches the three mock-ups at 390×844 and still fits at 375×667 (iPhone SE) without scrolling.
-- [ ] Tiles ≥ 25% of screen width. Elapsed and countdown are the largest text, readable at 1 m.
-- [ ] Shock/Disarm restarts the bar, bar tap restarts it, ROSC stops it, and Shock after ROSC restarts it.
-- [ ] After Shock, VF | pVT shows for 5 s without blocking other tiles. Tagging shows in the log, and ignoring it logs plain "Shock".
-- [ ] Undo steps back through several taps one at a time, and its label is always right.
-- [ ] Lock the phone for 5 min, then unlock: elapsed and countdown are correct, and the screen stayed awake while unlocked.
-- [ ] Passes the cognitive-load test (BRIEF): no sentences, no in-case decisions, every mis-tap is one tap to fix.
+- [x] Matches the three mock-ups at 390×844 and still fits at 375×667 (iPhone SE) without scrolling.
+- [x] Tiles ≥ 25% of screen width. Elapsed and countdown are the largest text, readable at 1 m.
+- [x] Shock/Disarm restarts the bar, bar tap restarts it, ROSC stops it, and Shock after ROSC restarts it.
+- [x] After Shock, VF | pVT shows for 5 s without blocking other tiles. Tagging shows in the log, and ignoring it logs plain "Shock".
+- [x] Undo steps back through several taps one at a time, and its label is always right.
+- [ ] *(on phone)* Lock the phone for 5 min, then unlock: elapsed and countdown are correct, and the screen stayed awake while unlocked.
+- [x] Passes the cognitive-load test (BRIEF): no sentences, no in-case decisions, every mis-tap is one tap to fix.

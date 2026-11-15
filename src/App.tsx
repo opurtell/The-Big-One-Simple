@@ -1,9 +1,10 @@
-// Phase 1 placeholder: unstyled screens so the logic can be clicked through.
-// Phase 2 replaces the case screen and Phase 3 the start, catch-up and log screens.
+// Screen switcher. The case screen is done (Phase 2); the start, catch-up, resync and log
+// screens are still Phase 1 placeholders until Phase 3.
 
 import { useState } from 'react';
-import { cycleRemaining, elapsedAt, formatTime, tileStats, undoable, type Pattern } from './clock';
-import { entryLabel, formatLog } from './log';
+import type { Pattern } from './clock';
+import { formatLog } from './log';
+import { CaseScreen } from './ui/CaseScreen';
 import { TILES, type TileId } from './tiles';
 import { useCase } from './useCase';
 
@@ -19,6 +20,7 @@ export default function App() {
   const [pattern, setPattern] = useState<Pattern | undefined>();
   const [priors, setPriors] = useState<Partial<Record<TileId, number>>>({});
   const [monitor, setMonitor] = useState('');
+  const [resyncing, setResyncing] = useState(false);
 
   const s = c.current;
   const view = screen === 'log' ? (s ?? c.last) : s;
@@ -76,41 +78,27 @@ export default function App() {
     );
   }
 
-  const remaining = cycleRemaining(view, c.now);
-  const next = undoable(view);
-  const lastShock = [...view.entries].reverse().find((e) => e.kind === 'shock' && !e.prior);
   return (
-    <main className="p-4">
-      <div>Elapsed {formatTime(elapsedAt(view, c.now), true)}</div>
-      <button className={btn} onClick={c.restartCycle}>
-        Cycle {remaining === null ? 'ROSC' : formatTime(remaining)}
-      </button>
-      <div>
-        {TILES.map((t) => {
-          const { count, sinceLast } = tileStats(view, t.id, c.now);
-          return (
-            <button key={t.id} className={`${btn} ${t.bg} ${t.fg}`} onClick={() => c.tap(t.id)}>
-              {t.label}{count > 0 && ` ×${count}`}{sinceLast !== null && ` · ${formatTime(sinceLast)} ago`}
-            </button>
-          );
-        })}
-      </div>
-      {lastShock && (
-        <div>
-          Tag last shock:
-          <button className={btn} onClick={() => c.tagShock(lastShock.id, 'VF')}>VF</button>
-          <button className={btn} onClick={() => c.tagShock(lastShock.id, 'pVT')}>pVT</button>
+    <>
+      <CaseScreen
+        s={view}
+        now={c.now}
+        onTap={c.tap}
+        onTagShock={c.tagShock}
+        onRestartCycle={c.restartCycle}
+        onUndo={c.undo}
+        onResync={() => setResyncing(true)}
+        onEnd={() => setScreen('log')}
+      />
+      {/* Phase 3 replaces this with the keypad ResyncSheet. */}
+      {resyncing && (
+        <div className="fixed inset-x-0 bottom-0 bg-white p-4 shadow-2xl">
+          <input className="border" placeholder="monitor secs" inputMode="numeric" value={monitor}
+            onChange={(e) => setMonitor(e.target.value)} />
+          <button className={btn} onClick={() => (c.resync(Number(monitor) || 0), setMonitor(''), setResyncing(false))}>Set</button>
+          <button className={btn} onClick={() => (setMonitor(''), setResyncing(false))}>Cancel</button>
         </div>
       )}
-      <div>
-        <input className="border" placeholder="monitor secs" inputMode="numeric" value={monitor}
-          onChange={(e) => setMonitor(e.target.value)} />
-        <button className={btn} onClick={() => (c.resync(Number(monitor) || 0), setMonitor(''))}>Resync</button>
-      </div>
-      <button className={btn} disabled={!next} onClick={c.undo}>
-        {next ? `Undo ${entryLabel(next)}` : 'Undo'}
-      </button>
-      <button className={btn} onClick={() => setScreen('log')}>End case</button>
-    </main>
+    </>
   );
 }

@@ -8,6 +8,7 @@ import { TILE_BY_ID, isTileId, type TileId } from './tiles';
 export const CYCLE_SECONDS = 120;
 export const DOUBLE_TAP_MS = 1000;
 export const STALE_MS = 3 * 60 * 60 * 1000;
+export const SHOCK_TAG_MS = 5000;
 
 export type Pattern = 'evens' | 'odds' | 'half-evens' | 'half-odds';
 export type Rhythm = 'VF' | 'pVT';
@@ -135,6 +136,16 @@ export function undo(s: CaseState): CaseState {
 /** Closes the case ("New case"). Elapsed freezes at `now`. */
 export function endCase(s: CaseState, now: number): CaseState {
   return s.status === 'ended' ? s : { ...s, status: 'ended', endedAt: now };
+}
+
+/**
+ * The Shock the VF | pVT tag is offered for: the newest entry, if it's a live Shock under
+ * 5 s old. Any later entry (another tile, bar tap, resync) closes the tag (DESIGN #6a).
+ */
+export function pendingShockTag(s: CaseState, now: number): Entry | undefined {
+  const last = s.entries[s.entries.length - 1];
+  if (s.status !== 'running' || !last || last.kind !== 'shock' || last.prior) return undefined;
+  return now - last.at < SHOCK_TAG_MS ? last : undefined;
 }
 
 /** Seconds left in the 2-min cycle (negative = overtime), or null after ROSC. */

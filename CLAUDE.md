@@ -8,9 +8,11 @@ the monitor's elapsed time and what has already been given), and drops everythin
 
 ## Status
 
-Phase 1 done (15/11/2026): upstream `src/` removed. Pure, tested clock and case logic in
-`src/clock.ts`, log text in `src/log.ts`, persistence and wake lock in `src/useCase.ts`, and an
-unstyled placeholder `src/App.tsx`. Next: Phase 2 (case screen). `docs/NEXT_SESSION.md` says where to start.
+Phase 1 done (15/11/2026): pure, tested clock and case logic in `src/clock.ts`, log text in
+`src/log.ts`, persistence and wake lock in `src/useCase.ts`.
+Phase 2 done (15/11/2026): the real case screen in `src/ui/` (`CaseScreen`, `CycleBar`, `Tile`,
+`ShockTag`). Start, catch-up, resync and log are still unstyled placeholders in `src/App.tsx`.
+Next: Phase 3. `docs/NEXT_SESSION.md` says where to start.
 
 ## Read these first
 
