@@ -48,6 +48,7 @@ export default function App() {
           now={c.now}
           onTap={c.tap}
           onTag={c.tagEntry}
+          onCheck={c.toggleCheck}
           onRestartCycle={c.restartCycle}
           onUndo={c.undo}
           onResync={() => setResyncing(true)}

@@ -67,6 +67,8 @@ Goes live at https://opurtell.github.io/The-Big-One-Simple/ once Pages is enable
 6. **This is clinical-adjacent.** It is a *log*, not decision support: no dose calculations,
    no prompts about what to give next. See `docs/BRIEF.md` non-goals. **One exception (15/11/2026):**
    upstream's adrenaline/amiodarone due-countdowns on their tiles (`drugDue` in `clock.ts`).
+   **Second exception (15/11/2026):** Matt's ROSC and PHEA checklists, shown only in ROSC
+   (`src/checklists.ts`, `ui/ChecklistPanel.tsx`). Ticks are never logged.
 7. **Don't push an upstream sync to `origin/main`.** `main` has upstream's Pages workflow, which
    deploys on push to `main` and would replace the live app. See `docs/DECISIONS.md`.
 

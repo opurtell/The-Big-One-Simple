@@ -118,3 +118,16 @@ Choices future sessions must respect. Newest first.
 - **Decision:** the case-screen button that opens the log reads **Summary**. Behaviour is unchanged:
   it opens the log with "Back to case", and the case only closes on "New case".
 - **Why:** "End case" read as final, but the case keeps running until "New case". "Summary" says what the tap shows.
+
+## 15/11/2026: ROSC timer and ROSC / PHEA checklists (Oscar)
+
+- **Decision:** in ROSC the cycle bar shows the time since ROSC as the main timer, and the ROSC
+  tile's slot becomes two buttons, "ROSC checklist" and "PHEA checklist", that open Matt's adult
+  checklists in place of the tiles (DESIGN #5a, #5b). Ticks are not logged.
+- **Amends:** "A log, not decision support" and the non-goal "no checklists": these two checklists
+  are allowed, post-ROSC only, ported unchanged from upstream (no paediatric variants).
+- **Rejected:** logging ticks (Matt's app doesn't, and it would bloat the ePCR log); a modal
+  overlay hiding the ROSC timer.
+- **Why:** Oscar asked for them; after ROSC the cognitive-load budget is bigger, and the tiles stay
+  one tap away (Close, or a re-arrest closes it automatically).
+

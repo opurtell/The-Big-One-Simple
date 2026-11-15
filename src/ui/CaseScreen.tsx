@@ -1,12 +1,15 @@
 // The one screen used mid-arrest (DESIGN.md §2). Everything here is derived from the
 // case and `now`; no time is counted in the UI.
 
+import { useState } from 'react';
+import { checked, CHECKLISTS, type ChecklistId } from '../checklists';
 import {
-  cycleRemaining, drugDue, elapsedAt, formatTime, pendingTag, tileStats, undoable,
+  cycleRemaining, drugDue, elapsedAt, formatTime, inRosc, pendingTag, tileStats, undoable,
   type CaseState, type Entry,
 } from '../clock';
 import { entryLabel, hhmm } from '../log';
 import { TILES, type Tag, type TileId } from '../tiles';
+import { ChecklistPanel } from './ChecklistPanel';
 import { CycleBar } from './CycleBar';
 import { TileTag } from './TileTag';
 import { Tile } from './Tile';
@@ -16,6 +19,7 @@ type Props = {
   now: number;
   onTap: (id: TileId) => void;
   onTag: (entryId: string, tag: Tag) => void;
+  onCheck: (list: ChecklistId, label: string) => void;
   onRestartCycle: () => void;
   onUndo: () => void;
   onResync: () => void;
@@ -25,10 +29,13 @@ type Props = {
 const GRID = TILES.filter((t) => t.id !== 'rosc');
 const ROSC = TILES.find((t) => t.id === 'rosc')!;
 
-export function CaseScreen({ s, now, onTap, onTag, onRestartCycle, onUndo, onResync, onEnd }: Props) {
+export function CaseScreen({ s, now, onTap, onTag, onCheck, onRestartCycle, onUndo, onResync, onEnd }: Props) {
   const next = undoable(s);
   const tagging = pendingTag(s, now) as (Entry & { kind: TileId }) | undefined;
   const rosc = tileStats(s, 'rosc', now);
+  const [open, setOpen] = useState<ChecklistId | null>(null);
+  // Re-arrest (Shock, Disarm, bar tap) leaves ROSC, which closes any open checklist.
+  const list = inRosc(s) ? open : null;
 
   return (
     <main className="mx-auto flex h-dvh max-w-[600px] flex-col gap-2.5 overflow-hidden px-3 pt-[max(8px,calc(env(safe-area-inset-top)+24px))] pb-[max(12px,env(safe-area-inset-bottom))] tabular-nums">
@@ -45,30 +52,57 @@ export function CaseScreen({ s, now, onTap, onTag, onRestartCycle, onUndo, onRes
 
       <CycleBar remaining={cycleRemaining(s, now)} roscAgo={rosc.sinceLast} onRestart={onRestartCycle} />
 
-      <div className="grid min-h-0 flex-1 grid-cols-2 grid-rows-3 gap-2.5">
-        {GRID.map((t) => {
-          const { count, sinceLast } = tileStats(s, t.id, now);
-          if (tagging?.kind === t.id) {
-            return <TileTag key={tagging.id} entry={tagging} count={count} onTag={(tag) => onTag(tagging.id, tag)} />;
-          }
-          return <Tile key={t.id} tile={t} count={count} sinceLast={sinceLast} due={drugDue(s, t.id, now)} onTap={() => onTap(t.id)} />;
-        })}
-      </div>
+      {list ? (
+        <ChecklistPanel list={list} ticked={checked(s, list)} onToggle={(label) => onCheck(list, label)} onClose={() => setOpen(null)} />
+      ) : (
+        <>
+          <div className="grid min-h-0 flex-1 grid-cols-2 grid-rows-3 gap-2.5">
+            {GRID.map((t) => {
+              const { count, sinceLast } = tileStats(s, t.id, now);
+              if (tagging?.kind === t.id) {
+                return <TileTag key={tagging.id} entry={tagging} count={count} onTag={(tag) => onTag(tagging.id, tag)} />;
+              }
+              return <Tile key={t.id} tile={t} count={count} sinceLast={sinceLast} due={drugDue(s, t.id, now)} onTap={() => onTap(t.id)} />;
+            })}
+          </div>
 
-      <Tile tile={ROSC} count={rosc.count} sinceLast={rosc.sinceLast} onTap={() => onTap('rosc')} wide />
+          {inRosc(s) ? (
+            <div className="grid shrink-0 grid-cols-2 gap-2.5">
+              <ChecklistButton list="rosc" colours="border-orange-200 bg-orange-100 text-orange-700" onOpen={setOpen} />
+              <ChecklistButton list="phea" colours="border-purple-200 bg-purple-100 text-purple-700" onOpen={setOpen} />
+            </div>
+          ) : (
+            <Tile tile={ROSC} count={rosc.count} sinceLast={rosc.sinceLast} onTap={() => (setOpen(null), onTap('rosc'))} wide />
+          )}
 
-      <div className="grid shrink-0 grid-cols-2 gap-2.5">
-        <button
-          onClick={onUndo}
-          disabled={!next}
-          className="h-14 truncate rounded-[14px] border-2 border-neutral-300 bg-white px-1 text-[16px] font-bold text-neutral-800 min-[400px]:text-[19px] disabled:text-neutral-300 short:h-12"
-        >
-          {next ? `Undo ${entryLabel(next)}` : 'Undo'}
-        </button>
-        <button onClick={onEnd} className="h-14 rounded-[14px] bg-neutral-800 text-[16px] font-bold text-white short:h-12 min-[400px]:text-[19px]">
-          Summary
-        </button>
-      </div>
+          <div className="grid shrink-0 grid-cols-2 gap-2.5">
+            <button
+              onClick={onUndo}
+              disabled={!next}
+              className="h-14 truncate rounded-[14px] border-2 border-neutral-300 bg-white px-1 text-[16px] font-bold text-neutral-800 min-[400px]:text-[19px] disabled:text-neutral-300 short:h-12"
+            >
+              {next ? `Undo ${entryLabel(next)}` : 'Undo'}
+            </button>
+            <button onClick={onEnd} className="h-14 rounded-[14px] bg-neutral-800 text-[16px] font-bold text-white short:h-12 min-[400px]:text-[19px]">
+              Summary
+            </button>
+          </div>
+        </>
+      )}
     </main>
+  );
+}
+
+// Takes the ROSC tile's slot while in ROSC (Matt's ROSC = orange, PHEA = purple).
+function ChecklistButton({ list, colours, onOpen }: { list: ChecklistId; colours: string; onOpen: (l: ChecklistId) => void }) {
+  const [name, word] = CHECKLISTS[list].title.split(' ');
+  return (
+    <button
+      onClick={() => onOpen(list)}
+      className={`flex h-[88px] flex-col items-center justify-center gap-1 rounded-[18px] border-2 short:h-[72px] ${colours}`}
+    >
+      <span className="text-[30px] font-extrabold leading-none tracking-wide short:text-[26px]">{name}</span>
+      <span className="text-[17px] font-semibold leading-none">{word}</span>
+    </button>
   );
 }

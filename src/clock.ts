@@ -30,6 +30,7 @@ export type CaseState = ClockSnap & {
   startClockTime: number; // wall ms at elapsed 0
   entries: Entry[];
   endedAt?: number;
+  checks?: { rosc: string[]; phea: string[] }; // checklist ticks; not logged (checklists.ts)
 };
 
 let idSeq = 0;
@@ -90,7 +91,9 @@ export function tap(s: CaseState, tileId: TileId, now: number): CaseState {
   const tile = TILE_BY_ID[tileId];
   const cycleStartElapsed = tile.stopsCycle ? null : tile.resetsCycle ? elapsed : s.cycleStartElapsed;
   const entry: Entry = { id: newId(now), kind: tileId, elapsed, at: now, before: snap(s) };
-  return { ...s, cycleStartElapsed, entries: [...s.entries, entry] };
+  // A new ROSC starts a fresh ROSC checklist; PHEA ticks carry over (upstream L2016).
+  const checks = tileId === 'rosc' && s.checks ? { ...s.checks, rosc: [] } : s.checks;
+  return { ...s, cycleStartElapsed, entries: [...s.entries, entry], checks };
 }
 
 /**
@@ -168,6 +171,9 @@ export function pendingTag(s: CaseState, now: number): Entry | undefined {
   if (s.status !== 'running' || !last || last.prior || !isTileId(last.kind) || !tagsFor(last.kind)) return undefined;
   return now - last.at < TAG_MS ? last : undefined;
 }
+
+/** In ROSC: the bar is stopped until a Shock, Disarm or bar tap (re-arrest, DESIGN #5). */
+export const inRosc = (s: CaseState) => s.cycleStartElapsed === null;
 
 /** Seconds left in the 2-min cycle (negative = overtime), or null after ROSC. */
 export function cycleRemaining(s: CaseState, now: number): number | null {
