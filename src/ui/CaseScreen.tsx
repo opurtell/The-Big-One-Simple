@@ -31,7 +31,7 @@ export function CaseScreen({ s, now, onTap, onTagShock, onRestartCycle, onUndo, 
   const rosc = tileStats(s, 'rosc', now);
 
   return (
-    <main className="mx-auto flex h-dvh max-w-[600px] flex-col gap-2.5 overflow-hidden px-3 pt-[max(8px,env(safe-area-inset-top))] pb-[max(12px,env(safe-area-inset-bottom))] tabular-nums">
+    <main className="mx-auto flex h-dvh max-w-[600px] flex-col gap-2.5 overflow-hidden px-3 pt-[max(8px,calc(env(safe-area-inset-top)+24px))] pb-[max(12px,env(safe-area-inset-bottom))] tabular-nums">
       <header className="flex h-[52px] shrink-0 items-center justify-between short:h-11">
         <span className="text-[17px] font-semibold text-neutral-500">{hhmm(now)}</span>
         <button
