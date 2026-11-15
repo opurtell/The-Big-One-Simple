@@ -38,9 +38,13 @@ export function LogScreen({ s, now, running, onBack, onNewCase }: Props) {
 
   return (
     <main className="mx-auto flex h-dvh max-w-[600px] flex-col gap-3 px-4 pt-[max(16px,calc(env(safe-area-inset-top)+24px))] pb-[max(16px,env(safe-area-inset-bottom))] tabular-nums">
-      <button onClick={onBack} className={`${big} shrink-0 bg-neutral-900 text-white`}>
-        {running ? 'Back to case' : 'Back'}
-      </button>
+      {running && (
+        <div className="grid shrink-0 grid-cols-2 gap-3">
+          <button onClick={onNewCase} className={`${big} col-start-2 border-2 border-neutral-300 bg-white text-neutral-900`}>
+            New case
+          </button>
+        </div>
+      )}
 
       <section className="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto rounded-2xl bg-white p-4 select-text">
         <div className="flex flex-col gap-0.5">
@@ -75,18 +79,16 @@ export function LogScreen({ s, now, running, onBack, onNewCase }: Props) {
         </ol>
       </section>
 
-      <div className={`grid shrink-0 gap-3 ${running ? 'grid-cols-2' : 'grid-cols-1'}`}>
+      <div className="grid shrink-0 grid-cols-2 gap-3">
         <button
           onClick={async () => setCopied((await copyText(formatLog(s, Date.now()))) ? 'yes' : 'failed')}
           className={`${big} bg-emerald-600 text-white active:bg-emerald-700`}
         >
           {copied === 'yes' ? 'Copied' : copied === 'failed' ? 'Copy failed' : 'Copy'}
         </button>
-        {running && (
-          <button onClick={onNewCase} className={`${big} border-2 border-neutral-300 bg-white text-neutral-900`}>
-            New case
-          </button>
-        )}
+        <button onClick={onBack} className={`${big} bg-neutral-900 text-white`}>
+          {running ? 'Back to case' : 'Back'}
+        </button>
       </div>
     </main>
   );
