@@ -8,9 +8,9 @@ the monitor's elapsed time and what has already been given), and drops everythin
 
 ## Status
 
-Phase 0: set up only. The fork is cloned and documented. `src/` is still the unmodified
-upstream app (a 5,930-line `src/App.tsx`). No simple-version code has been written yet.
-`docs/NEXT_SESSION.md` says where to start.
+Phase 1 done (15/11/2026): upstream `src/` removed. Pure, tested clock and case logic in
+`src/clock.ts`, log text in `src/log.ts`, persistence and wake lock in `src/useCase.ts`, and an
+unstyled placeholder `src/App.tsx`. Next: Phase 2 (case screen). `docs/NEXT_SESSION.md` says where to start.
 
 ## Read these first
 
@@ -81,4 +81,5 @@ npm install
 npm run dev      # http://localhost:3000/The-Big-One-Simple/
 npm run build
 npm run lint     # tsc --noEmit
+npm test         # vitest (clock and log logic)
 ```
