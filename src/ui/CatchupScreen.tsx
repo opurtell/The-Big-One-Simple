@@ -31,7 +31,7 @@ export function CatchupScreen({ now, onBack, onStart }: Props) {
   const startLabel = time.digits ? formatTime(secondsNow(time, now), true) : '00:00';
 
   return (
-    <main className="mx-auto flex h-dvh max-w-[600px] flex-col gap-3 overflow-y-auto px-4 pt-[max(16px,env(safe-area-inset-top))] pb-[max(16px,env(safe-area-inset-bottom))] tabular-nums short:gap-2 short:pt-[max(12px,env(safe-area-inset-top))] short:pb-[max(12px,env(safe-area-inset-bottom))]">
+    <main className="mx-auto flex h-dvh max-w-[600px] flex-col gap-3 overflow-y-auto px-4 pt-[max(16px,calc(env(safe-area-inset-top)+24px))] pb-[max(16px,env(safe-area-inset-bottom))] tabular-nums short:gap-2 short:pt-[max(12px,calc(env(safe-area-inset-top)+24px))] short:pb-[max(12px,env(safe-area-inset-bottom))]">
       <header className="flex h-11 shrink-0 items-center justify-between short:h-10">
         <button onClick={onBack} className="h-11 w-[72px] rounded-xl short:h-10 bg-neutral-200 text-[17px] font-semibold text-neutral-700">
           Back

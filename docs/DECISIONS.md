@@ -78,3 +78,9 @@ Choices future sessions must respect. Newest first.
 - **Rejected:** a toast or modal wherever you are (adds a thing to read mid-arrest), and silent
   auto-update (could reload mid-case).
 - **Why:** passes the cognitive-load test. A reload is safe anyway because state is in `localStorage`.
+
+## 15/11/2026: Top padding clears the iOS status-bar blur
+
+- **Decision:** every screen's top padding is `max(Npx, safe-area-inset-top + 24px)`, not just the inset.
+- **Why:** installed on iOS, a blurred band extends below the status bar and was cutting into the
+  elapsed time. 24 px moves the time clear of it. Android and desktop (inset 0) are unchanged.

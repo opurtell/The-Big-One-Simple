@@ -10,7 +10,7 @@ type Props = { now: number; last: CaseState | null; onStart: () => void; onCatch
 export function StartScreen({ now, last, onStart, onCatchup, onLast }: Props) {
   const update = useUpdate();
   return (
-    <main className="mx-auto flex h-dvh max-w-[600px] flex-col gap-4 px-4 pt-[max(24px,env(safe-area-inset-top))] pb-[max(24px,env(safe-area-inset-bottom))] tabular-nums">
+    <main className="mx-auto flex h-dvh max-w-[600px] flex-col gap-4 px-4 pt-[max(24px,calc(env(safe-area-inset-top)+24px))] pb-[max(24px,env(safe-area-inset-bottom))] tabular-nums">
       <header className="flex items-baseline justify-between">
         <h1 className="text-xl font-bold">The Big One: Simple</h1>
         <span className="text-base text-neutral-600">{hhmm(now)}</span>

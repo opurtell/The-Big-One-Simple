@@ -37,7 +37,7 @@ export function LogScreen({ s, now, running, onBack, onNewCase }: Props) {
   const big = 'h-16 rounded-2xl text-[22px] font-bold short:h-14';
 
   return (
-    <main className="mx-auto flex h-dvh max-w-[600px] flex-col gap-3 px-4 pt-[max(16px,env(safe-area-inset-top))] pb-[max(16px,env(safe-area-inset-bottom))] tabular-nums">
+    <main className="mx-auto flex h-dvh max-w-[600px] flex-col gap-3 px-4 pt-[max(16px,calc(env(safe-area-inset-top)+24px))] pb-[max(16px,env(safe-area-inset-bottom))] tabular-nums">
       <button onClick={onBack} className={`${big} shrink-0 bg-neutral-900 text-white`}>
         {running ? 'Back to case' : 'Back'}
       </button>
