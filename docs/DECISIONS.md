@@ -60,3 +60,21 @@ Choices future sessions must respect. Newest first.
 
 - **Decision:** no doses, no weight, no prompts about what to give or when.
 - **Why:** that's what keeps the cognitive load low, and it keeps the app clear of clinical-advice territory.
+
+## 15/11/2026: Deploy Pages from `simple`
+
+- **Decision:** `.github/workflows/static.yml` deploys on push to `simple` (plus manual runs), and
+  type-checks and runs the tests before building.
+- **Rejected:** merging `simple` into `main` (then `main` can't mirror upstream any more).
+- **Why:** `main` stays a clean upstream mirror. **Catch:** `main` still carries upstream's own
+  workflow that deploys on push to `main`, so pushing an upstream sync to `origin/main` would replace
+  the live app with Matt's (with the wrong `base`, so broken). Sync `main` locally only, or re-run the
+  `simple` deploy straight after.
+
+## 15/11/2026: Update prompt only on the Start screen
+
+- **Decision:** when a new deploy is waiting, the Start screen shows a small blue "Update ready ·
+  Reload" bar. Nothing appears during a case or on the log. The app also checks for a new deploy hourly.
+- **Rejected:** a toast or modal wherever you are (adds a thing to read mid-arrest), and silent
+  auto-update (could reload mid-case).
+- **Why:** passes the cognitive-load test. A reload is safe anyway because state is in `localStorage`.
