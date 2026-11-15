@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
-  cycleRemaining, elapsedAt, formatTime, isStale, nextPatternTarget, parseCase, pendingTag, resync,
+  cycleRemaining, drugDue, elapsedAt, isCatchup, formatTime, isStale, nextPatternTarget, parseCase, pendingTag, resync,
   restartCycle, startCase, tagEntry, tap, tileStats, undo, undoable,
 } from './clock';
 
@@ -84,6 +84,44 @@ describe('resync', () => {
     expect(elapsedAt(s, sec(200))).toBe(200);
     expect(s.cycleStartElapsed).toBe(60);
     expect(s.entries).toEqual(s0.entries);
+    expect(s.startClockTime).toBe(s0.startClockTime);
+  });
+
+  it('shifts earlier entries by the delta, keeping their clock times', () => {
+    const s0 = tap(startCase(T0), 'adrenaline', sec(30));
+    const s = resync(s0, 112, sec(100));
+    expect(s.entries.map((e) => [e.kind, e.elapsed, e.at])).toEqual([
+      ['start', 12, T0],
+      ['adrenaline', 42, sec(30)],
+      ['resync', 112, sec(100)],
+    ]);
+    expect(s.startClockTime).toBe(T0 - 12_000);
+    expect(isCatchup(s)).toBe(false); // a resync doesn't turn "Start" into "Start (catch-up)"
+  });
+
+  it('several resyncs add up, and undoing each restores the step before', () => {
+    const a = tap(startCase(T0), 'shock', sec(60));
+    const b = resync(a, 110, sec(100)); // +10
+    const c = tap(b, 'adrenaline', sec(130)); // elapsed 140
+    const d = resync(c, 135, sec(150)); // app 160 → -25
+    expect(d.entries.map((e) => e.elapsed)).toEqual([-15, 45, 85, 115, 135]);
+    expect(elapsedAt(d, sec(150))).toBe(135);
+    expect(undo(d)).toEqual(c);
+    expect(undo(undo(undo(d)))).toEqual(a);
+  });
+
+  it('leaves "before app" entries alone', () => {
+    const s = resync(startCase(T0, 300, undefined, { adrenaline: 2 }), 320, sec(60));
+    const prior = s.entries.find((e) => e.prior)!;
+    expect(prior).toMatchObject({ elapsed: 0, prior: 2 });
+    expect(undo(s).entries.find((e) => e.prior)).toEqual(prior);
+  });
+
+  it('time since last and drug countdowns stay put across a resync', () => {
+    const s0 = tap(startCase(T0), 'adrenaline', sec(30));
+    const s = resync(s0, 70, sec(100)); // -30
+    expect(tileStats(s, 'adrenaline', sec(100)).sinceLast).toBe(70);
+    expect(drugDue(s, 'adrenaline', sec(100))).toBe(drugDue(s0, 'adrenaline', sec(100)));
   });
 });
 

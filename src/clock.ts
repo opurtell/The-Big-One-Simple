@@ -79,8 +79,9 @@ export function startCase(
 }
 
 /** True if this case began as a catch-up (monitor time already running, or priors entered). */
+// Reads the clock at Start, not the Start entry's elapsed, which a resync can move.
 export const isCatchup = (s: CaseState) =>
-  s.entries.some((e) => e.prior) || (s.entries.find((e) => e.kind === 'start')?.elapsed ?? 0) > 0;
+  s.entries.some((e) => e.prior) || (s.entries.find((e) => e.kind === 'start')?.before.pausedTime ?? 0) > 0;
 
 export function tap(s: CaseState, tileId: TileId, now: number): CaseState {
   const last = [...s.entries].reverse().find((e) => e.kind === tileId && !e.prior);
@@ -109,8 +110,11 @@ export function restartCycle(s: CaseState, now: number): CaseState {
 }
 
 /**
- * Re-bases elapsed time onto what the monitor shows. The cycle start shifts by the same
- * delta so the bar doesn't jump. Log clock times stay the phone's real time (DESIGN #18).
+ * Re-bases elapsed time onto what the monitor shows (DESIGN #18). Every earlier timed entry
+ * keeps its real clock time (`at`) but its elapsed time shifts by the same delta, so the whole
+ * log lines up with the monitor, and `startClockTime` moves to the monitor's zero. The cycle
+ * start and drug countdowns shift with it, so nothing on screen jumps except the elapsed time.
+ * Each resync applies to everything before it, so several resyncs add up.
  */
 export function resync(s: CaseState, monitorElapsed: number, now: number): CaseState {
   // Whole seconds only (the monitor shows whole seconds). Shifting both the clock and the
@@ -123,9 +127,14 @@ export function resync(s: CaseState, monitorElapsed: number, now: number): CaseS
     ...s,
     pausedTime: s.pausedTime + delta * 1000,
     cycleStartElapsed: s.cycleStartElapsed === null ? null : s.cycleStartElapsed + delta,
-    entries: [...s.entries, entry],
+    startClockTime: s.startClockTime - delta * 1000,
+    entries: [...shiftEntries(s.entries, delta), entry],
   };
 }
+
+/** Shifts the elapsed time of timed entries. "Before app" priors have no time and stay put. */
+const shiftEntries = (entries: Entry[], delta: number) =>
+  entries.map((e) => (e.prior ? e : { ...e, elapsed: e.elapsed + delta }));
 
 /** The newest entry Undo would remove, or undefined (priors and Start can't be undone). */
 export function undoable(s: CaseState): Entry | undefined {
@@ -136,7 +145,12 @@ export function undoable(s: CaseState): Entry | undefined {
 export function undo(s: CaseState): CaseState {
   const last = undoable(s);
   if (!last) return s;
-  return { ...s, ...last.before, entries: s.entries.slice(0, -1) };
+  const rest = s.entries.slice(0, -1);
+  if (last.kind === 'resync' && last.delta) {
+    // Reverse the re-base: earlier entries and the case start go back to where they were.
+    return { ...s, ...last.before, startClockTime: s.startClockTime + last.delta * 1000, entries: shiftEntries(rest, -last.delta) };
+  }
+  return { ...s, ...last.before, entries: rest };
 }
 
 /** Closes the case ("New case"). Elapsed freezes at `now`. */

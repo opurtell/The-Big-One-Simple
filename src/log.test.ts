@@ -54,11 +54,30 @@ describe('formatLog', () => {
     s = resync(s, 112, at(110));
     s = resync(s, 105, at(120));
     const lines = formatLog(s, at(130)).split('\n');
+    // Each resync re-bases everything before it; clock times never move. The net -0:15
+    // puts Start before the monitor's zero, and the header start moves to monitor zero.
+    expect(lines[1]).toBe('Start 14:32:25 · Duration 01:55');
     expect(lines.slice(-4)).toEqual([
-      '00:00  14:32:10  Start',
-      '01:40  14:33:50  Cycle restart',
-      '01:52  14:34:00  Resync +0:02',
+      '-00:15  14:32:10  Start',
+      '01:25  14:33:50  Cycle restart',
+      '01:35  14:34:00  Resync +0:02',
       '01:45  14:34:10  Resync -0:17',
+    ]);
+  });
+
+  it('a resync re-bases earlier lines but leaves before-app lines and clock times alone', () => {
+    let s = startCase(at(450), 450, undefined, { shock: 2 });
+    s = tap(s, 'adrenaline', at(500));
+    s = resync(s, 530, at(520)); // monitor 10 s ahead
+    s = tap(s, 'shock', at(560));
+    const text = formatLog(s, at(600));
+    expect(text).toContain('Start 14:32:00 ·');
+    expect(text.split('\n').slice(-5)).toEqual([
+      'before app · Shock ×2',
+      '07:40  14:39:40  Start (catch-up)',
+      '08:30  14:40:30  Adrenaline',
+      '08:50  14:40:50  Resync +0:10',
+      '09:30  14:41:30  Shock',
     ]);
   });
 });
