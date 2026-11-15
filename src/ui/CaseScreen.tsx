@@ -2,7 +2,7 @@
 // case and `now`; no time is counted in the UI.
 
 import {
-  cycleRemaining, elapsedAt, formatTime, pendingShockTag, tileStats, undoable,
+  cycleRemaining, drugDue, elapsedAt, formatTime, pendingShockTag, tileStats, undoable,
   type CaseState, type Rhythm,
 } from '../clock';
 import { entryLabel, hhmm } from '../log';
@@ -51,7 +51,7 @@ export function CaseScreen({ s, now, onTap, onTagShock, onRestartCycle, onUndo, 
           if (t.id === 'shock' && shock) {
             return <ShockTag key={shock.id} shock={shock} count={count} onTag={(r) => onTagShock(shock.id, r)} />;
           }
-          return <Tile key={t.id} tile={t} count={count} sinceLast={sinceLast} onTap={() => onTap(t.id)} />;
+          return <Tile key={t.id} tile={t} count={count} sinceLast={sinceLast} due={drugDue(s, t.id, now)} onTap={() => onTap(t.id)} />;
         })}
       </div>
 

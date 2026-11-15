@@ -2,6 +2,19 @@
 
 Choices future sessions must respect. Newest first.
 
+## 15/11/2026: Adrenaline and amiodarone countdowns (Oscar)
+
+- **Decision:** the Adrenaline and Amiodarone tiles show when the next dose is due, using Matt's
+  upstream timers as is: adrenaline 4:00 after the last dose, amiodarone 5:00 after the first dose
+  and gone after the second. The tile's second line reads `×2 · due 3:12`, then `due +0:14` once
+  overdue. From 30 s out the tile turns red and pulses (upstream's colours). Hidden when the last
+  dose was "before app" (time unknown), during ROSC, and after re-arrest if it was already overdue
+  by then (upstream's "wipe"). Derived from the log, so Undo and resync just work.
+- **Rejected:** upstream's two-tap "Disregard?" dismiss (adds a decision mid-case); a separate
+  timer row (wouldn't fit an iPhone SE without scrolling).
+- **Why:** Oscar wants the same timing cues as Matt's app. This **amends "A log, not decision
+  support"** below for these two timers only: still no doses, weight, prompts, sounds or pop-ups.
+
 ## 15/11/2026: Optional VF / pVT tag on Shock (Oscar)
 
 - **Decision:** Shock logs and restarts the bar at once. For 5 s the tile offers **VF | pVT**. Tapping one is optional, and if it's ignored the log says "Shock".
@@ -59,6 +72,7 @@ Choices future sessions must respect. Newest first.
 ## 15/11/2026: A log, not decision support
 
 - **Decision:** no doses, no weight, no prompts about what to give or when.
+- **Amended 15/11/2026:** adrenaline and amiodarone due-countdowns on their tiles (see above).
 - **Why:** that's what keeps the cognitive load low, and it keeps the app clear of clinical-advice territory.
 
 ## 15/11/2026: Deploy Pages from `simple`

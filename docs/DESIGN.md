@@ -49,7 +49,7 @@ This builds on `BRIEF.md` (goals, non-goals, the cognitive-load test) and `DECIS
 | # | Decision |
 |---|---|
 | 10 | Times show as `mm:ss`, then `h:mm:ss` after 60 min. |
-| 11 | A tile that hasn't been used shows only its label. After use: `×2 · 3:41 ago`. |
+| 11 | A tile that hasn't been used shows only its label. After use: `×2 · 3:41 ago`. Adrenaline and Amiodarone show `×2 · due 3:12` instead (upstream timers, red + pulse from 30 s out; see DECISIONS.md 15/11/2026). |
 | 12 | The PWA manifest locks to portrait. In a browser it still works in landscape, just not designed for it. |
 
 ## 3. Time entry
