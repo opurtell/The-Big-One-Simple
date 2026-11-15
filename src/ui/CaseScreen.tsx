@@ -66,7 +66,7 @@ export function CaseScreen({ s, now, onTap, onTag, onRestartCycle, onUndo, onRes
           {next ? `Undo ${entryLabel(next)}` : 'Undo'}
         </button>
         <button onClick={onEnd} className="h-14 rounded-[14px] bg-neutral-800 text-[16px] font-bold text-white short:h-12 min-[400px]:text-[19px]">
-          End case
+          Summary
         </button>
       </div>
     </main>

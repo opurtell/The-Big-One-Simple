@@ -103,3 +103,9 @@ Choices future sessions must respect. Newest first.
 - **Decision:** every screen's top padding is `max(Npx, safe-area-inset-top + 24px)`, not just the inset.
 - **Why:** installed on iOS, a blurred band extends below the status bar and was cutting into the
   elapsed time. 24 px moves the time clear of it. Android and desktop (inset 0) are unchanged.
+
+## 15/11/2026: "End case" button renamed "Summary" (Oscar)
+
+- **Decision:** the case-screen button that opens the log reads **Summary**. Behaviour is unchanged:
+  it opens the log with "Back to case", and the case only closes on "New case".
+- **Why:** "End case" read as final, but the case keeps running until "New case". "Summary" says what the tap shows.

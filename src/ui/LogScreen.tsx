@@ -1,4 +1,4 @@
-// End case → the log (DESIGN #4, #19-21). A running case can go straight back with no gap;
+// Summary → the log (DESIGN #4, #19-21). A running case can go straight back with no gap;
 // it's only closed when New case is tapped. Last case opens here read-only.
 
 import { useEffect, useState } from 'react';
