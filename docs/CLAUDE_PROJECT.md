@@ -30,7 +30,7 @@ Oscar pastes in.
   resync (enter what the monitor shows). Small wall-clock time at top left.
 - **Grid of exactly seven big tiles:** Adrenaline, Amiodarone, Shock, Disarm, Airway (LMA/ETT), IV/IO, ROSC.
   Tapping one logs it with a timestamp. Each tile shows its count and the time since the last one (`×2 · 3:41 ago`).
-- **Undo** (last tap) and **End case** → a chronological log (elapsed + clock time + item)
+- **Undo** (last tap) and **Summary** → a chronological log (elapsed + clock time + item)
   that can be copied as text for the ePCR.
 - **Start screen:** a big "Start now" button, and a secondary "Catch up": enter the monitor's
   elapsed time plus counts of what's already been given (− / + steppers on the same tiles).

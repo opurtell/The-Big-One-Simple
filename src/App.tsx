@@ -26,7 +26,7 @@ export default function App() {
     );
   }
 
-  // The log shows the running case after End case, or Last case from the start screen.
+  // The log shows the running case after Summary, or Last case from the start screen.
   const logCase = screen === 'log' ? (s ?? c.last) : null;
   if (logCase) {
     return (

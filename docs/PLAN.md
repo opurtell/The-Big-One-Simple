@@ -21,7 +21,7 @@ cycle and Undo restores it" and "resync doesn't jump the cycle bar".
 ## Phase 2: Case screen
 
 Layout: 2-min cycle bar across the top (big countdown, red overtime), synced elapsed time
-top right (tap to resync), tile grid of 7 (count + time since last), Undo + End case.
+top right (tap to resync), tile grid of 7 (count + time since last), Undo + Summary.
 
 **Accept:** passes the cognitive-load test in BRIEF. Tiles ≥ 25% of width on a 375 px
 screen. The timer is readable at 1 m. Shock/Disarm restarts the bar, and ROSC stops it. Undo reverses the last tap. Lock the phone for 5 min,

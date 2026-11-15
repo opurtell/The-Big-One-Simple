@@ -10,7 +10,7 @@ This builds on `BRIEF.md` (goals, non-goals, the cognitive-load test) and `DECIS
 | 1 | **Multi-step Undo.** Each tap removes the newest remaining entry. The button names it: "Undo Shock". | A mis-tap is one tap to fix, with no guessing what will go. |
 | 2 | **Double-tap guard.** A second tap on the same tile within 1 s is ignored. | Gloved double-taps. Anything slower is a real tap, and Undo covers it. |
 | 3 | **Feedback:** the tile flashes plus a short `navigator.vibrate`. No sound. | iOS web apps can't vibrate, so the flash is the main cue. |
-| 4 | **End case has no confirm dialog.** It opens the log, with a big "Back to case" button. The case is final only when "New case" is tapped. | Reversible in one tap, with nothing to read. |
+| 4 | **Summary (was "End case") has no confirm dialog.** It opens the log, with a big "Back to case" button. The case is final only when "New case" is tapped. | Reversible in one tap, with nothing to read. |
 | 5 | **ROSC stops the bar.** A later Shock, Disarm or bar tap restarts it. There's no re-arrest tile. | The existing tiles already mean re-arrest. |
 | 6a | **Optional VF / pVT tag on Shock** (added 15/11/2026). Shock logs and restarts the bar immediately. For 5 s the Shock tile splits into **VF \| pVT**, with a shrinking line along the bottom. Tap one to tag the shock, or tap the other to change it. If it's ignored or another tile is tapped, the tile goes back to normal and the log says "Shock". Not a modal: the other tiles keep working. | It records the rhythm without blocking the shock or adding a decision you have to make. |
 | 6b | **Optional IV / IO tag on IV/IO** (added 15/11/2026). Same as 6a: IV/IO logs at once, then for 5 s the tile splits into **IV \| IO** (blue) with the shrinking line. Ignored = "IV/IO"; tagged = "IV/IO (IO)". | Records the access route with no extra decision. |
@@ -29,7 +29,7 @@ This builds on `BRIEF.md` (goals, non-goals, the cognitive-load test) and `DECIS
 [ Adrenaline ] [ Amiodarone ]
 [ IV/IO      ] [ Airway     ]
 [ ROSC (full width)         ]
-[ Undo ]       [ End case ]      ← thin strip
+[ Undo ]       [ Summary ]       ← thin strip
 ```
 
 *Shock and Disarm sit nearest the bar they restart. ROSC is wide, so it's easy to see and hard to hit by accident.*
@@ -74,7 +74,7 @@ This builds on `BRIEF.md` (goals, non-goals, the cognitive-load test) and `DECIS
 | 21 | Undone entries are deleted from the log, not crossed out. |
 | 22 | **Last case:** one case kept, viewable from the start screen, until the next case starts. |
 | 23 | **Reopening:** a running case resumes immediately. If nothing was tapped for 3 h, it's closed and saved as "Last case". |
-| 24 | The elapsed clock keeps running after ROSC. Only End case stops it. |
+| 24 | The elapsed clock keeps running after ROSC. Only New case stops it. |
 | 25 | The log can't be edited in the app. Corrections happen in the ePCR. |
 
 ## Example copied log
