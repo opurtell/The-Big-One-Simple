@@ -66,6 +66,12 @@ tap or a bar tap. Set it to `null` on ROSC (bar hidden or greyed). On resync, sh
 the same delta as the clock so the bar doesn't jump. Undoing a Shock/Disarm restores the
 previous `cycleStartElapsed`, so store it on the log entry.
 
+## Drug timers (ported 15/11/2026)
+
+`adrenalineStatus` / `amiodaroneStatus` (`App.tsx:2169-2246`) and the re-arrest wipe
+(`applyRearrestTimerWipeCheck`, `App.tsx:1809`) are ported as `drugDue` in `src/clock.ts`.
+The "Disregard?" dismiss is not.
+
 ## Treatment record
 
 `src/types.ts` `Treatment`: `{ name, elapsed, round, clock, clockSeconds, prior?, ... }`.
@@ -74,7 +80,7 @@ Simple version: `{ id, tile, elapsed, at (wall ms), prior? }`. Derive the displa
 ## Drop entirely
 
 Timing modes (`elapsed`/`log`/`minimal`), the rhythm interval patterns and the delay/pause logic, forced shock,
-CPR rounds, adrenaline/amiodarone "wipe" timers, dose functions (`getAdrenalinePushDose`,
+CPR rounds, dose functions (`getAdrenalinePushDose`,
 `getAmiodaroneDose`), weight/paed, checklists, vitals, tutorial, release notes, Android
 back-button stack handling (`App.tsx:1400-1540`, overkill with one screen), previous-cases list.
 

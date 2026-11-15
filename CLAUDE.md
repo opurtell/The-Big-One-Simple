@@ -65,7 +65,8 @@ Goes live at https://opurtell.github.io/The-Big-One-Simple/ once Pages is enable
 5. **Upstream code has `SPDX-License-Identifier: Apache-2.0` headers but no LICENSE file.**
    Keep the headers on files derived from upstream.
 6. **This is clinical-adjacent.** It is a *log*, not decision support: no dose calculations,
-   no prompts about what to give next. See `docs/BRIEF.md` non-goals.
+   no prompts about what to give next. See `docs/BRIEF.md` non-goals. **One exception (15/11/2026):**
+   upstream's adrenaline/amiodarone due-countdowns on their tiles (`drugDue` in `clock.ts`).
 7. **Don't push an upstream sync to `origin/main`.** `main` has upstream's Pages workflow, which
    deploys on push to `main` and would replace the live app. See `docs/DECISIONS.md`.
 

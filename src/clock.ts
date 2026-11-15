@@ -209,3 +209,32 @@ export function parseCase(raw: string | null): CaseState | null {
     return null;
   }
 }
+
+/** Upstream drug timers (App.tsx `adrenalineStatus` / `amiodaroneStatus`, ~L2169-2246). */
+export const DRUG_DUE: Partial<Record<TileId, number>> = { adrenaline: 240, amiodarone: 300 };
+export const DUE_WARN = 30; // upstream turns the timer red from 30 s out
+
+/**
+ * Seconds until the next dose is due (negative = overdue), or null when upstream hides the
+ * timer: no timed dose yet (priors only = "unknown"), in ROSC, amiodarone after its second
+ * dose, or a timer that was already overdue at re-arrest (upstream's "wipe", L1809).
+ */
+export function drugDue(s: CaseState, tileId: TileId, now: number): number | null {
+  const interval = DRUG_DUE[tileId];
+  if (!interval || s.cycleStartElapsed === null) return null;
+  const { count } = tileStats(s, tileId, now);
+  if (tileId === 'amiodarone' && count >= 2) return null;
+  let i = s.entries.length - 1;
+  while (i >= 0 && (s.entries[i].kind !== tileId || s.entries[i].prior)) i--;
+  if (i < 0) return null;
+  const dose = s.entries[i];
+  let inRosc = false;
+  for (const e of s.entries.slice(i + 1)) {
+    if (e.kind === 'rosc') inRosc = true;
+    else if (inRosc && (e.kind === 'shock' || e.kind === 'disarm' || e.kind === 'cycle')) {
+      inRosc = false;
+      if (e.elapsed - dose.elapsed >= interval) return null;
+    }
+  }
+  return interval - (elapsedAt(s, now) - dose.elapsed);
+}
