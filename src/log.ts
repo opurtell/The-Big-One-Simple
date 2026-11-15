@@ -1,7 +1,7 @@
 // Plain-text log for pasting into the ePCR (DESIGN.md §4).
 
 import { elapsedAt, formatTime, isCatchup, type CaseState, type Entry } from './clock';
-import { TILE_BY_ID, type TileId } from './tiles';
+import { TILE_BY_ID, tagsFor, type TileId } from './tiles';
 
 // Totals and "before app" lines read in clinical order, not grid order.
 const LOG_ORDER: TileId[] = ['shock', 'adrenaline', 'amiodarone', 'disarm', 'ivio', 'lma', 'rosc'];
@@ -26,26 +26,29 @@ export function entryLabel(e: Entry, s?: CaseState): string {
       return `Resync ${(e.delta ?? 0) < 0 ? '-' : '+'}${formatTime(Math.abs(e.delta ?? 0))}`;
     default: {
       const label = TILE_BY_ID[e.kind].label;
-      return e.rhythm ? `${label} (${e.rhythm})` : label;
+      return e.tag ? `${label} (${e.tag})` : label;
     }
   }
 }
 
 export const hhmm = (ms: number) => clockTime(ms).slice(0, 5);
 
-/** Per-tile totals in clinical order, e.g. `Shock ×3 (VF 2, pVT 1)`. Shared by the screen and the text. */
+/** Per-tile totals in clinical order, e.g. `Shock ×3 (VF 2, pVT 1)` or `IV/IO ×2 (IO 1)`. Shared by the screen and the text. */
 export function totals(s: CaseState): { id: TileId; text: string }[] {
   const out: { id: TileId; text: string }[] = [];
   for (const id of LOG_ORDER) {
     let count = 0;
-    const tags = { VF: 0, pVT: 0 };
+    const tagged = new Map<string, number>();
     for (const e of s.entries) {
       if (e.kind !== id) continue;
       count += e.prior ?? 1;
-      if (e.rhythm) tags[e.rhythm] += 1;
+      if (e.tag) tagged.set(e.tag, (tagged.get(e.tag) ?? 0) + 1);
     }
     if (!count) continue;
-    const tagText = [tags.VF && `VF ${tags.VF}`, tags.pVT && `pVT ${tags.pVT}`].filter(Boolean).join(', ');
+    const tagText = (tagsFor(id) ?? [])
+      .filter((t) => tagged.get(t))
+      .map((t) => `${t} ${tagged.get(t)}`)
+      .join(', ');
     out.push({ id, text: `${TILE_BY_ID[id].label} ×${count}${tagText ? ` (${tagText})` : ''}` });
   }
   return out;

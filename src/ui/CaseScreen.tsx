@@ -2,20 +2,20 @@
 // case and `now`; no time is counted in the UI.
 
 import {
-  cycleRemaining, drugDue, elapsedAt, formatTime, pendingShockTag, tileStats, undoable,
-  type CaseState, type Rhythm,
+  cycleRemaining, drugDue, elapsedAt, formatTime, pendingTag, tileStats, undoable,
+  type CaseState, type Entry,
 } from '../clock';
 import { entryLabel, hhmm } from '../log';
-import { TILES, type TileId } from '../tiles';
+import { TILES, type Tag, type TileId } from '../tiles';
 import { CycleBar } from './CycleBar';
-import { ShockTag } from './ShockTag';
+import { TileTag } from './TileTag';
 import { Tile } from './Tile';
 
 type Props = {
   s: CaseState;
   now: number;
   onTap: (id: TileId) => void;
-  onTagShock: (entryId: string, rhythm: Rhythm) => void;
+  onTag: (entryId: string, tag: Tag) => void;
   onRestartCycle: () => void;
   onUndo: () => void;
   onResync: () => void;
@@ -25,9 +25,9 @@ type Props = {
 const GRID = TILES.filter((t) => t.id !== 'rosc');
 const ROSC = TILES.find((t) => t.id === 'rosc')!;
 
-export function CaseScreen({ s, now, onTap, onTagShock, onRestartCycle, onUndo, onResync, onEnd }: Props) {
+export function CaseScreen({ s, now, onTap, onTag, onRestartCycle, onUndo, onResync, onEnd }: Props) {
   const next = undoable(s);
-  const shock = pendingShockTag(s, now);
+  const tagging = pendingTag(s, now) as (Entry & { kind: TileId }) | undefined;
   const rosc = tileStats(s, 'rosc', now);
 
   return (
@@ -48,8 +48,8 @@ export function CaseScreen({ s, now, onTap, onTagShock, onRestartCycle, onUndo, 
       <div className="grid min-h-0 flex-1 grid-cols-2 grid-rows-3 gap-2.5">
         {GRID.map((t) => {
           const { count, sinceLast } = tileStats(s, t.id, now);
-          if (t.id === 'shock' && shock) {
-            return <ShockTag key={shock.id} shock={shock} count={count} onTag={(r) => onTagShock(shock.id, r)} />;
+          if (tagging?.kind === t.id) {
+            return <TileTag key={tagging.id} entry={tagging} count={count} onTag={(tag) => onTag(tagging.id, tag)} />;
           }
           return <Tile key={t.id} tile={t} count={count} sinceLast={sinceLast} due={drugDue(s, t.id, now)} onTap={() => onTap(t.id)} />;
         })}

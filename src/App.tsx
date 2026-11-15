@@ -47,7 +47,7 @@ export default function App() {
           s={s}
           now={c.now}
           onTap={c.tap}
-          onTagShock={c.tagShock}
+          onTag={c.tagEntry}
           onRestartCycle={c.restartCycle}
           onUndo={c.undo}
           onResync={() => setResyncing(true)}

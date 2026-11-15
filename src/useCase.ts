@@ -4,8 +4,8 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import * as clock from './clock';
-import type { CaseState, Pattern, Rhythm } from './clock';
-import type { TileId } from './tiles';
+import type { CaseState, Pattern } from './clock';
+import type { Tag, TileId } from './tiles';
 
 export const STATE_KEY = 'theBigOneSimpleState';
 export const LAST_KEY = 'theBigOneSimpleLastCase';
@@ -134,7 +134,7 @@ export function useCase() {
       buzz();
       update((s, t) => clock.tap(s, id, t));
     },
-    tagShock: (entryId: string, rhythm: Rhythm) => update((s) => clock.tagShock(s, entryId, rhythm)),
+    tagEntry: (entryId: string, tag: Tag) => update((s) => clock.tagEntry(s, entryId, tag)),
     restartCycle: () => update((s, t) => clock.restartCycle(s, t)),
     resync: (monitorElapsed: number) => update((s, t) => clock.resync(s, monitorElapsed, t)),
     undo: () => update((s) => clock.undo(s)),

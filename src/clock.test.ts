@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
-  cycleRemaining, elapsedAt, formatTime, isStale, nextPatternTarget, parseCase, pendingShockTag, resync,
-  restartCycle, startCase, tagShock, tap, tileStats, undo, undoable,
+  cycleRemaining, elapsedAt, formatTime, isStale, nextPatternTarget, parseCase, pendingTag, resync,
+  restartCycle, startCase, tagEntry, tap, tileStats, undo, undoable,
 } from './clock';
 
 const T0 = new Date(2026, 10, 15, 14, 32, 10).getTime();
@@ -97,13 +97,13 @@ describe('taps and undo', () => {
     expect(tap(s, 'shock', sec(11.2)).entries).toHaveLength(s.entries.length + 1);
   });
 
-  it('tagShock sets and changes VF/pVT, and Undo after tagging removes the shock', () => {
+  it('tagEntry sets and changes VF/pVT, and Undo after tagging removes the shock', () => {
     let s = tap(startCase(T0), 'shock', sec(30));
     const id = s.entries.at(-1)!.id;
-    s = tagShock(s, id, 'VF');
-    expect(s.entries.at(-1)!.rhythm).toBe('VF');
-    s = tagShock(s, id, 'pVT');
-    expect(s.entries.at(-1)!.rhythm).toBe('pVT');
+    s = tagEntry(s, id, 'VF');
+    expect(s.entries.at(-1)!.tag).toBe('VF');
+    s = tagEntry(s, id, 'pVT');
+    expect(s.entries.at(-1)!.tag).toBe('pVT');
     expect(s.entries.filter((e) => e.kind === 'shock')).toHaveLength(1);
     s = undo(s);
     expect(s.entries.some((e) => e.kind === 'shock')).toBe(false);
@@ -140,25 +140,53 @@ describe('formatTime', () => {
   });
 });
 
-describe('shock tag window', () => {
+describe('tag window', () => {
+  it('offers IV | IO and LMA | ETT the same way, and rejects tags from another tile', () => {
+    let s = tap(startCase(T0), 'ivio', sec(40));
+    const iv = s.entries.at(-1)!.id;
+    expect(pendingTag(s, sec(44.9))?.kind).toBe('ivio');
+    expect(pendingTag(s, sec(45))).toBeUndefined();
+    expect(tagEntry(s, iv, 'VF')).toBe(s);
+    s = tagEntry(s, iv, 'IO');
+    expect(s.entries.at(-1)!.tag).toBe('IO');
+    s = tap(s, 'lma', sec(50));
+    expect(pendingTag(s, sec(50))?.kind).toBe('lma');
+    s = tagEntry(s, s.entries.at(-1)!.id, 'ETT');
+    expect(s.entries.at(-1)!.tag).toBe('ETT');
+    expect(undo(s).entries.at(-1)!.tag).toBe('IO');
+  });
+
+  it('is not offered for untagged tiles', () => {
+    expect(pendingTag(tap(startCase(T0), 'adrenaline', sec(10)), sec(10))).toBeUndefined();
+  });
+
+  it('loads a saved case whose Shock tag was stored as rhythm', () => {
+    const s = tap(startCase(T0), 'shock', sec(30));
+    const old = { ...s, entries: s.entries.map((e) => (e.kind === 'shock' ? { ...e, rhythm: 'VF' } : e)) };
+    const back = parseCase(JSON.stringify(old))!;
+    expect(back.entries.at(-1)!.tag).toBe('VF');
+    expect('rhythm' in back.entries.at(-1)!).toBe(false);
+  });
+
+
   it('offers the tag for 5 s after a Shock, then closes', () => {
     const s = tap(startCase(T0), 'shock', sec(60));
-    expect(pendingShockTag(s, sec(60))?.kind).toBe('shock');
-    expect(pendingShockTag(s, sec(64.9))).toBeDefined();
-    expect(pendingShockTag(s, sec(65))).toBeUndefined();
+    expect(pendingTag(s, sec(60))?.kind).toBe('shock');
+    expect(pendingTag(s, sec(64.9))).toBeDefined();
+    expect(pendingTag(s, sec(65))).toBeUndefined();
   });
 
   it('closes when any other tile or a bar tap follows, and stays open after tagging', () => {
     let s = tap(startCase(T0), 'shock', sec(60));
     const id = s.entries[s.entries.length - 1].id;
-    s = tagShock(s, id, 'VF');
-    expect(pendingShockTag(s, sec(62))?.rhythm).toBe('VF');
-    expect(pendingShockTag(tap(s, 'adrenaline', sec(62)), sec(62))).toBeUndefined();
-    expect(pendingShockTag(restartCycle(s, sec(62)), sec(62))).toBeUndefined();
+    s = tagEntry(s, id, 'VF');
+    expect(pendingTag(s, sec(62))?.tag).toBe('VF');
+    expect(pendingTag(tap(s, 'adrenaline', sec(62)), sec(62))).toBeUndefined();
+    expect(pendingTag(restartCycle(s, sec(62)), sec(62))).toBeUndefined();
   });
 
   it('is never offered for "before app" shocks', () => {
-    expect(pendingShockTag(startCase(T0, 90, undefined, { shock: 2 }), T0)).toBeUndefined();
+    expect(pendingTag(startCase(T0, 90, undefined, { shock: 2 }), T0)).toBeUndefined();
   });
 });
 

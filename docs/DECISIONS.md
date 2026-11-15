@@ -15,6 +15,11 @@ Choices future sessions must respect. Newest first.
 - **Why:** Oscar wants the same timing cues as Matt's app. This **amends "A log, not decision
   support"** below for these two timers only: still no doses, weight, prompts, sounds or pop-ups.
 
+## 15/11/2026: Optional IV / IO and LMA / ETT tags; LMA tile becomes "Airway" (Oscar)
+
+- **Decision:** IV/IO and the airway tile get the same optional 5 s split as Shock: **IV | IO** and **LMA | ETT**. The LMA tile is relabelled **Airway** (log: "Airway (ETT)"). Ignored = untagged.
+- **Why:** records the route and device with no extra decision, and keeps seven tiles. One shared component and `TILE_TAGS` list in `src/tiles.ts`.
+
 ## 15/11/2026: Optional VF / pVT tag on Shock (Oscar)
 
 - **Decision:** Shock logs and restarts the bar at once. For 5 s the tile offers **VF | pVT**. Tapping one is optional, and if it's ignored the log says "Shock".
