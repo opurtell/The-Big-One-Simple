@@ -3,6 +3,7 @@
 // runs. Time is never counted here: the interval only re-renders (see clock.ts).
 
 import { useCallback, useEffect, useState } from 'react';
+import { toggleCheck, type ChecklistId } from './checklists';
 import * as clock from './clock';
 import type { CaseState, Pattern } from './clock';
 import type { Tag, TileId } from './tiles';
@@ -135,6 +136,7 @@ export function useCase() {
       update((s, t) => clock.tap(s, id, t));
     },
     tagEntry: (entryId: string, tag: Tag) => update((s) => clock.tagEntry(s, entryId, tag)),
+    toggleCheck: (list: ChecklistId, label: string) => update((s) => toggleCheck(s, list, label)),
     restartCycle: () => update((s, t) => clock.restartCycle(s, t)),
     resync: (monitorElapsed: number) => update((s, t) => clock.resync(s, monitorElapsed, t)),
     undo: () => update((s) => clock.undo(s)),

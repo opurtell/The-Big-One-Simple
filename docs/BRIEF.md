@@ -53,7 +53,7 @@ These are deliberately out of scope. They're the upstream app's job.
 - Dose calculation, patient weight, adult/paed modes
 - Rhythm-check *prompts*, forced-shock flows, "what's next" suggestions (the 2-min bar is
   a passive indicator only)
-- Checklists (Hs and Ts, ROSC, PHEA), vitals entry
+- Checklists (Hs and Ts), vitals entry. *ROSC and PHEA checklists were added post-ROSC only on 15/11/2026 (DECISIONS.md).*
 - Tutorials, release notes, multiple timing modes
 - Case history beyond the current and last case
 - OCR (tesseract), AI (`@google/genai`), any backend

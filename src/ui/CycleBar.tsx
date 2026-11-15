@@ -15,14 +15,16 @@ const big = 'relative text-[76px] font-extrabold leading-none tracking-[-2px] sh
 
 export function CycleBar({ remaining, roscAgo, onRestart }: Props) {
   if (remaining === null) {
+    // ROSC: time since ROSC becomes the main timer, same size as the countdown. A tap is
+    // still a re-arrest (restarts the 2:00, DESIGN #5), as Shock and Disarm are.
     return (
       <button
-        aria-label="Cycle stopped at ROSC, tap to restart"
+        aria-label="Time since ROSC, tap to restart the cycle"
         onClick={onRestart}
-        className={`${base} gap-0.5 border-2 border-dashed border-neutral-400 bg-neutral-200`}
+        className={`${base} border-2 border-emerald-700 bg-emerald-600`}
       >
-        <span className="text-[40px] font-extrabold leading-none tracking-wide text-neutral-800 short:text-[34px]">ROSC</span>
-        {roscAgo !== null && <span className="text-[17px] font-semibold text-neutral-700">{formatTime(roscAgo)} ago</span>}
+        <span className="absolute top-2 left-3.5 text-[17px] font-bold tracking-wide text-emerald-50 short:top-1.5">ROSC</span>
+        <span className={`${big} text-white`}>{formatTime(roscAgo ?? 0)}</span>
       </button>
     );
   }

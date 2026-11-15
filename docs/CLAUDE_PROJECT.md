@@ -41,7 +41,7 @@ Oscar pastes in.
    add a decision during a case (if so, cut it or move it to before or after the case)? Is a
    mis-tap fixable in one tap? Is it glanceable from 1 m? Push back on anything that fails.
 2. **It's a log, not decision support.** No doses, weight, paediatric modes, rhythm-check
-   prompts, "give adrenaline now" reminders or checklists. Those belong in Matt's full app.
+   prompts, "give adrenaline now" reminders or checklists (except the post-ROSC ROSC and PHEA checklists, DECISIONS.md 15/11/2026). Those belong in Matt's full app.
    *Exception (15/11/2026):* the Adrenaline and Amiodarone tiles show upstream's due-countdowns.
 3. **The time must be drift-free.** Elapsed time = `(Date.now() - startTime + pausedTime) / 1000`,
    always derived from the wall clock and never counted up with `setInterval` (the interval only
