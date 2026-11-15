@@ -63,7 +63,7 @@ This builds on `BRIEF.md` (goals, non-goals, the cognitive-load test) and `DECIS
 | 15 | **Catch-up has an optional cycle pattern:** a chip row with **Evens · Odds · Half evens · Half odds**. If one is picked, `cycleStartElapsed = calcNextIntervalTarget(elapsed, pattern) - 120` (port upstream L2252 as is). If none is picked, the bar starts a fresh 2:00. After that, every Shock/Disarm restarts the bar from the tap; it doesn't snap back to the pattern. **Catch-up only:** "Start now" has no pattern choice. |
 | 16 | Catch-up prior counts: − / + steppers on 6 tiles (all except ROSC). Logged as "before app". |
 | 17 | Wall-clock time is shown small and grey, top left. |
-| 18 | **Resync** changes only elapsed time. Log clock times are always the phone's real time (`at`), so `startClockTime` isn't shifted. A resync is logged as "Resync +0:12". `cycleStartElapsed` shifts by the same delta, so the bar doesn't jump. |
+| 18 | **Resync re-bases the whole case onto the monitor** (amended 15/11/2026). Every earlier timed entry keeps its clock time (`at`, the phone's real time) but its elapsed time shifts by the resync delta, so the log lines up with the monitor; `startClockTime` moves to the monitor's zero. "Before app" entries have no time and don't move. Each resync applies to everything before it, so several add up; Undo of a resync shifts them back. A resync is logged as "Resync +0:12". `cycleStartElapsed` shifts by the same delta, so the bar doesn't jump, and drug countdowns and "time since" don't move. An entry pushed before the monitor's zero reads `-00:15` in the log. |
 
 ## 4. Log, export and returning to the app
 

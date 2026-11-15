@@ -31,6 +31,12 @@ export function entryLabel(e: Entry, s?: CaseState): string {
   }
 }
 
+/**
+ * Log elapsed time. A resync can put early entries before the monitor's zero (the app was
+ * started before the monitor was on); those read `-00:10`, not the cycle bar's `+` overtime.
+ */
+export const logElapsed = (sec: number) => (sec < 0 ? `-${formatTime(-sec, true)}` : formatTime(sec, true));
+
 export const hhmm = (ms: number) => clockTime(ms).slice(0, 5);
 
 /** Per-tile totals in clinical order, e.g. `Shock ×3 (VF 2, pVT 1)` or `IV/IO ×2 (IO 1)`. Shared by the screen and the text. */
@@ -63,7 +69,7 @@ export function logRows(s: CaseState): { key: string; elapsed: string | null; cl
     if (count) rows.push({ key: `prior-${id}`, elapsed: null, clock: null, item: `${TILE_BY_ID[id].label} ×${count}` });
   }
   for (const e of s.entries) {
-    if (!e.prior) rows.push({ key: e.id, elapsed: formatTime(e.elapsed, true), clock: clockTime(e.at), item: entryLabel(e, s) });
+    if (!e.prior) rows.push({ key: e.id, elapsed: logElapsed(e.elapsed), clock: clockTime(e.at), item: entryLabel(e, s) });
   }
   return rows;
 }

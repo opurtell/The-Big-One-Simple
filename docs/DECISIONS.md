@@ -2,6 +2,15 @@
 
 Choices future sessions must respect. Newest first.
 
+## 15/11/2026: Resync re-bases earlier entries (Oscar)
+
+- **Decision:** a resync shifts the elapsed time of every entry logged before it by the resync
+  delta, so the whole log matches the monitor. Clock times never change. The log header's start
+  time moves to the monitor's zero. "Before app" entries are untouched. Resyncs add up; Undo
+  reverses one. Amends DESIGN #18 (which shifted only elapsed time from the resync onwards).
+- **Why:** the ePCR wants one elapsed timeline that matches the monitor. Before this, entries
+  before a resync were on the app's old timeline, and drug countdowns jumped by the delta.
+
 ## 15/11/2026: Adrenaline and amiodarone countdowns (Oscar)
 
 - **Decision:** the Adrenaline and Amiodarone tiles show when the next dose is due, using Matt's
